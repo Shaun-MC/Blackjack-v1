@@ -1,7 +1,7 @@
 #ifndef CONTROLLED_PLAYER_H
 #define CONTROLLED_PLAYER_H
 
-#include <vector>
+#include <iostream>
 
 using namespace std;
 
