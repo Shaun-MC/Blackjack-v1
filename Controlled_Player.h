@@ -1,84 +1,70 @@
 #ifndef CONTROLLED_PLAYER_H
 #define CONTROLLED_PLAYER_H
 
-//#include "Statistics_Manager.h"
-//#include "Statistics_Manager.cpp"
-
 #include <vector>
 
 using namespace std;
 
-    // 'variables wanted for the 'player' class;
-    // a linked list hand for holding the card data - and the ability to create another one if the case of spliting
-    // statsManager class for keeping track of bets and a variety of other data //TODO WIP
-    // 
-    // create virtual functions that deal with the similarties between a 'Dealer' & a 'player'//TODO
-    //virtual initializeHand(); ...
+    // a linked list hand for holding the card data - and the ability to create another one if the case of spliting.
 
-class player{
+class Player{
     public:
 
-    class player_card_node{
+    class PlayerCard{
         public:
 
-        player_card_node() : next(nullptr), prev(nullptr), card_suit(0), card_value(0), card_suit_character("") {};
+        PlayerCard() : next(nullptr), prev(nullptr), cardSuit(0), cardValue(0), cardSuitCharacter("") {};
             
-        player_card_node(const int suit, const int value);
+        PlayerCard(const int suit, const int value);
 
-        unsigned int card_suit, card_value;
-        string card_suit_character; 
-        player_card_node *next, *prev;
+        unsigned int cardSuit, cardValue;
+        string cardSuitCharacter; 
+        PlayerCard *next, *prev;
     };
-
-    player() : head(nullptr), tail(nullptr), iterator(head), handTotal(), handSize(0) {};
     
-    ~player();
-
-    player(const player& copy_player);
-
-    player& operator = (const player& left_player); 
-
-    void add_card_to_hand(const int card_suit, const int card_value);
-
-    bool remove_card_from_hand();
+    Player() : head(nullptr), tail(nullptr), iterator(head), handTotal(), handSize(0) {};
     
-    bool display_player_hand();
+    ~Player();
 
-    void update_hand_total();
+    Player(const Player& copy_Player);
 
-    int check_game_options() const;
+    Player& operator = (const Player& left_Player); 
 
-    bool bust_checker() const;
+    void addToHand(const int suit, const int value);
 
-    bool split_check() const;
+    bool removeFromHand();
+    
+    bool displayPlayerHand();
 
-    bool double_down_check() const; 
+    void updateHandTotal();
 
-    bool hit_or_stand_check() const;
+    int gameOptionsCheck() const;
 
-    bool natural_check() const;
+    bool bustChecker() const;
 
-    void game_options_error_checking() const;
+    bool splitCheck() const;
 
-    // bool surrenderCheck() const;
+    bool doubleDownCheck() const; 
 
-    // function for creating another hand for splits
+    bool hitStandCheck() const;
 
-    // function for ending the hand ???
+    bool naturalsCheck() const;
 
-    void reset_iterator() const;
-    bool has_more() const;
-    player_card_node& next() const;
-    void test_connections() const;
+    void gameOptionsErrorCheck() const;
 
-    //stats_manager statsInstance;
+    // function for splits
+
+    void resetIterator() const;
+    bool hasMore() const;
+    PlayerCard& next() const;
+    void testConnections() const;
     
     private:
 
     int handSize;
     int handTotal[2]; 
-    player_card_node *head, *tail;
-    mutable player_card_node *iterator;
+    PlayerCard *head, *tail;
+    mutable PlayerCard *iterator;
 };
 
 #endif

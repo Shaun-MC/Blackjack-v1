@@ -2,100 +2,100 @@
 
 #include <iomanip>
 
-player::player_card_node::player_card_node(const int suit, const int value){
+Player::PlayerCard::PlayerCard(const int suit, const int value){
 
     next = prev = nullptr;
-    card_suit = suit;
-    card_value = value;
+    cardSuit = suit;
+    cardValue = value;
 
     switch(suit){
         case 1: 
-        card_suit_character = "\u2665";   // heart
+        cardSuitCharacter = "\u2665";   // heart
         break;
         case 2:
-        card_suit_character = "\u2666";   // diamond
+        cardSuitCharacter = "\u2666";   // diamond
         break;
         case 3:
-        card_suit_character = "\u2663";   // club
+        cardSuitCharacter = "\u2663";   // club
         break;
         case 4:
-        card_suit_character = "\u2660";   // spade
+        cardSuitCharacter = "\u2660";   // spade
         break;
         default:
-        cout << "ERROR IN player_card_node Constructor: INVALID SUIT VALUE!" << endl;
+        cout << "ERROR IN PlayerCard Constructor: INVALID SUIT VALUE!" << endl;
         exit(1);
     }
 }
 
-player::~player(){
+Player::~Player(){
 
     iterator = tail;
 
-    player_card_node* deleteNode = new player_card_node();
+    PlayerCard* deleteNode = new PlayerCard();
 
-    while (this->has_more()){
+    while (this->hasMore()){
         deleteNode = iterator;
         iterator = iterator->prev;
         delete deleteNode;
     }
 }
-player::player(const player& copyplayer){
+Player::Player(const Player& copyPlayer){
 
-    this->handTotal[0] = copyplayer.handTotal[0];
-    this->handTotal[1] = copyplayer.handTotal[1];
+    this->handTotal[0] = copyPlayer.handTotal[0];
+    this->handTotal[1] = copyPlayer.handTotal[1];
 
     this->head = this->tail = nullptr;
     
-    this->reset_iterator();
-    copyplayer.reset_iterator();
+    this->resetIterator();
+    copyPlayer.resetIterator();
 
-    while (copyplayer.has_more()){
-        this->add_card_to_hand(copyplayer.iterator->card_suit, copyplayer.iterator->card_value);
-        copyplayer.iterator = copyplayer.iterator->next;
+    while (copyPlayer.hasMore()){
+        this->addToHand(copyPlayer.iterator->cardSuit, copyPlayer.iterator->cardValue);
+        copyPlayer.iterator = copyPlayer.iterator->next;
     }
 
 }
-player& player::operator = (const player& leftplayer){
+Player& Player::operator = (const Player& leftPlayer){
 
-    this->handTotal[0] = leftplayer.handTotal[0];
-    this->handTotal[1] = leftplayer.handTotal[1];
+    this->handTotal[0] = leftPlayer.handTotal[0];
+    this->handTotal[1] = leftPlayer.handTotal[1];
 
     this->head = this->tail = nullptr;
     
-    this->reset_iterator();
-    leftplayer.reset_iterator();
+    this->resetIterator();
+    leftPlayer.resetIterator();
 
-    while (leftplayer.has_more()){
-        this->add_card_to_hand(leftplayer.iterator->card_suit, leftplayer.iterator->card_value);
-        leftplayer.iterator = leftplayer.iterator->next;
+    while (leftPlayer.hasMore()){
+        this->addToHand(leftPlayer.iterator->cardSuit, leftPlayer.iterator->cardValue);
+        leftPlayer.iterator = leftPlayer.iterator->next;
     }
 
     return *this;
 
 }
-void player::add_card_to_hand(const int card_suit, const int card_value){ 
+void Player::addToHand(const int suit, const int value){ 
 
-    player_card_node *insert_node = new player_card_node(card_suit, card_value);
+    PlayerCard *insertNode = new PlayerCard(suit, value);
 
     if (head == nullptr){   // 0 nodes
         
-        head = tail = insert_node; 
+        head = tail = insertNode; 
     } else {                // 1 & many nodes
-        insert_node->prev = tail;
-        tail->next = insert_node;
-        tail = insert_node;
+        insertNode->prev = tail;
+        tail->next = insertNode;
+        tail = insertNode;
         ++handSize;
     }
 
-    reset_iterator();
+    resetIterator();
     return;
 }
-bool player::remove_card_from_hand(){
+bool Player::removeFromHand(){
 
-    player_card_node *deleteNode = new player_card_node();
+    PlayerCard *deleteNode = new PlayerCard();
 
     if (head == nullptr){   // 0 nodes
-        cout << "ERROR in remove_card_from_hand(): REMOVING FROM EMPTY LIST!" << endl;
+        cout << "ERROR in removeFromHand(): REMOVING FROM EMPTY LIST!" << endl;
         exit(1);
     } else if (head == tail){   // 1 node
 
@@ -112,12 +112,12 @@ bool player::remove_card_from_hand(){
     delete deleteNode;
     return true;
 }
-bool player::display_player_hand() { 
+bool Player::displayPlayerHand() { 
 
-    this->update_hand_total();
+    this->updateHandTotal();
 
     if (this->handTotal[0] == 0){
-        cout << "ERROR in display_player_hand(): HAND IS EMPTY!" << endl;
+        cout << "ERROR in display_PlayerHand(): HAND IS EMPTY!" << endl;
         exit(1);
     } else {
 
@@ -133,9 +133,9 @@ bool player::display_player_hand() {
 
     unsigned int counter = 0;
     
-    this->reset_iterator();
+    this->resetIterator();
 
-    while (this->has_more()){
+    while (this->hasMore()){
         
         cout << setw(2);
 
@@ -145,7 +145,7 @@ bool player::display_player_hand() {
             counter = 0;
         }
 
-        switch(this->iterator->card_value){
+        switch(this->iterator->cardValue){
             case 1:
             cout << 'A';
             break;
@@ -159,10 +159,10 @@ bool player::display_player_hand() {
             cout << 'K';
             break;
             default:
-            cout << this->iterator->card_value;
+            cout << this->iterator->cardValue;
         }
 
-        cout << this->iterator->card_suit_character << "  ";
+        cout << this->iterator->cardSuitCharacter << "  ";
 
         this->iterator = this->iterator->next;
         ++counter;
@@ -171,34 +171,34 @@ bool player::display_player_hand() {
 
     return true;
 }
-void player::update_hand_total(){ // using handTotal and reseting it every call seems lame
+void Player::updateHandTotal(){ // using handTotal and reseting it every call seems lame
 
     int aceCounter = 0;
 
     this->handTotal[0] = 0;
     this->handTotal[1] = 0;
 
-    this->reset_iterator();
+    this->resetIterator();
 
     if (head == nullptr) { //TODO feels improper, throw error?
         
-        cout << "ERROR IN update_hand_total(): EMPTY HAND, CAN'T EVALUATE!";
+        cout << "ERROR INH(): EMPTY HAND, CAN'T EVALUATE!";
         exit(1);
     }
-    while(this->has_more()){
-        if (this->iterator->card_value >= 10 && this->iterator->card_value < 14){
+    while(this->hasMore()){
+        if (this->iterator->cardValue >= 10 && this->iterator->cardValue < 14){
             
             this->handTotal[0] += 10;
         } 
         
-        else if (iterator->card_value == 1){
+        else if (iterator->cardValue == 1){
             
             ++aceCounter;
         } 
         
         else{
         
-            this->handTotal[0] += this->iterator->card_value;
+            this->handTotal[0] += this->iterator->cardValue;
         } 
         
         this->iterator = this->iterator->next;
@@ -240,59 +240,57 @@ void player::update_hand_total(){ // using handTotal and reseting it every call 
     
     return;
 } 
-void player::game_options_error_checking() const{
+void Player::gameOptionsErrorCheck() const{
 
-    reset_iterator();
+    resetIterator();
 
     if (head == nullptr){
-        cout << "ERROR in player::game_options_error_checking(): empty list" << endl;
+        cout << "ERROR in Player::gameOptionsErrorCheck(): empty list" << endl;
         exit(1);
     }
     else if (iterator->next == nullptr){
-        cout << "ERROR in player::game_options_error_checking(): only 1 node" << endl;
+        cout << "ERROR in Player::gameOptionsErrorCheck(): only 1 node" << endl;
         exit(1);
     } else if (handSize >= 3){
-        cout << "ERROR in player::game_options_error_checking(): invaild logic check, more than 2 cards" << endl;
+        cout << "ERROR in Player::gameOptionsErrorCheck(): invaild logic check, more than 2 cards" << endl;
         exit(1);
     }
 
-    if (iterator->card_value == iterator->next->card_value){
+    if (iterator->cardValue == iterator->next->cardValue){
 
         cout << "TEST PASSED" << endl;
         return;
     }
 }
-int player::check_game_options() const{
+int Player::gameOptionsCheck() const{
 
-    // v2: have a surrender check
-
-    if (natural_check()){
+    if (naturalsCheck()){
 
         return 0;
     }
-    else if (split_check()){
+    else if (splitCheck()){
         
         return 1; 
-    } else if (double_down_check()){
+    } else if (doubleDownCheck()){
 
         return 2;
-    } else if (hit_or_stand_check()){ // hit
+    } else if (hitStandCheck()){ // hit
 
         return 3;
-    } else if (!hit_or_stand_check()){ // stand
+    } else if (!hitStandCheck()){ // stand
 
         return 4;
     } else {
 
-        cout << "ERROR in player::check_game_options(): out of bounds check!" << endl;
+        cout << "ERROR in Player::check_game_options(): out of bounds check!" << endl;
         exit(1);
     }
 
     return 0;
 }
-bool player::bust_checker() const{
+bool Player::bustChecker() const{
 
-    // will have to be called after update_hand_total is called to eval the correct data at the proper time
+    // will have to be called afterH is called to eval the correct data at the proper time
     
     // return true if busted - false if not
 
@@ -305,13 +303,13 @@ bool player::bust_checker() const{
 
     return true;
 }
-bool player::split_check() const{
+bool Player::splitCheck() const{
 
-    game_options_error_checking();
+    gameOptionsErrorCheck();
 
-    reset_iterator();
+    resetIterator();
 
-    if (iterator->card_value == iterator->next->card_value){
+    if (iterator->cardValue == iterator->next->cardValue){
 
         cout << "TEST PASSED" << endl;
         return true;
@@ -319,9 +317,9 @@ bool player::split_check() const{
 
     return false;
 }
-bool player::double_down_check() const {
+bool Player::doubleDownCheck() const {
     
-    game_options_error_checking();
+    gameOptionsErrorCheck();
 
     char responce;
 
@@ -347,7 +345,7 @@ bool player::double_down_check() const {
     cout << "Dealer: No Doubling Down. Let's carry on." << endl;
     return false;
 }
-bool player::hit_or_stand_check() const{
+bool Player::hitStandCheck() const{
 
     char responce;
 
@@ -366,9 +364,9 @@ bool player::hit_or_stand_check() const{
 
     return false;
 }
-bool player::natural_check() const{
+bool Player::naturalsCheck() const{
 
-    game_options_error_checking();
+    gameOptionsErrorCheck();
     
     if (handTotal[1] == 21){
 
@@ -378,11 +376,11 @@ bool player::natural_check() const{
     return false;
 }
 
-void player::reset_iterator() const{
+void Player::resetIterator() const{
 
     iterator = head;
 }
-bool player::has_more() const{
+bool Player::hasMore() const{
 
     if (iterator != nullptr){
         return true;
@@ -390,9 +388,9 @@ bool player::has_more() const{
 
     return false;
 }
-player::player_card_node& player::next() const{
+Player::PlayerCard& Player::next() const{
 
-    player_card_node *tempNode = new player_card_node();
+    PlayerCard *tempNode = new PlayerCard();
     
     if (iterator == nullptr){
         cout << "ERROR IN next(): CANNOT RETRIEVE VALUE FROM AN EMPTY LIST\n";
@@ -404,9 +402,9 @@ player::player_card_node& player::next() const{
     
     return *tempNode;
 }
-void player::test_connections() const{
+void Player::testConnections() const{
 
-    reset_iterator();
+    resetIterator();
 
     if (head == nullptr){
         cout << "Empty List!" << endl;
@@ -420,7 +418,7 @@ void player::test_connections() const{
 
     while (iterator != tail){
         if (iterator != iterator->next->prev){
-            cout << "Bad Connection at " << iterator->card_value << iterator->card_suit_character << endl;
+            cout << "Bad Connection at " << iterator->cardValue << iterator->cardSuitCharacter << endl;
             return;
         }
         iterator = iterator->next;
