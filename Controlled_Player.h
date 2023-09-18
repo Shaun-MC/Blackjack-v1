@@ -50,7 +50,7 @@ class Player{
 
     bool naturalsCheck() const;
 
-    void gameOptionsErrorCheck() const;
+    void gameOptionsErrorCheck(int calledVal) const;
 
     // function for splits
 

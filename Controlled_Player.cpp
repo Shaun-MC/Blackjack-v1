@@ -23,7 +23,6 @@ Player::PlayerCard::PlayerCard(const int suit, const int value){
         break;
         default:
         cout << "ERROR IN PlayerCard Constructor: INVALID SUIT VALUE!" << endl;
-        exit(1);
     }
 }
 
@@ -96,7 +95,6 @@ bool Player::removeFromHand(){
 
     if (head == nullptr){   // 0 nodes
         cout << "ERROR in removeFromHand(): REMOVING FROM EMPTY LIST!" << endl;
-        exit(1);
     } else if (head == tail){   // 1 node
 
         deleteNode = tail;
@@ -118,7 +116,6 @@ bool Player::displayPlayerHand() {
 
     if (this->handTotal[0] == 0){
         cout << "ERROR in display_PlayerHand(): HAND IS EMPTY!" << endl;
-        exit(1);
     } else {
 
         cout << "Current Hand Total:  " << this->handTotal[0];
@@ -183,7 +180,6 @@ void Player::updateHandTotal(){ // using handTotal and reseting it every call se
     if (head == nullptr) { //TODO feels improper, throw error?
         
         cout << "ERROR INH(): EMPTY HAND, CAN'T EVALUATE!";
-        exit(1);
     }
     while(this->hasMore()){
         if (this->iterator->cardValue >= 10 && this->iterator->cardValue < 14){
@@ -235,27 +231,36 @@ void Player::updateHandTotal(){ // using handTotal and reseting it every call se
         break;
         default:
         cout << "TOO MANY ACES IN countHandTotal()!" << endl;
-        exit(1);
     }
     
     return;
 } 
-void Player::gameOptionsErrorCheck() const{
+void Player::gameOptionsErrorCheck(int calledVal) const{ // doesnt say where it got called
 
     resetIterator();
 
     if (head == nullptr){
         cout << "ERROR in Player::gameOptionsErrorCheck(): empty list" << endl;
-        exit(1);
     }
     else if (iterator->next == nullptr){
         cout << "ERROR in Player::gameOptionsErrorCheck(): only 1 node" << endl;
-        exit(1);
     } else if (handSize >= 3){
         cout << "ERROR in Player::gameOptionsErrorCheck(): invaild logic check, more than 2 cards" << endl;
-        exit(1);
     }
 
+    switch (calledVal){
+        case 0:
+        cout << "Called from spiltCheck()" << endl;
+        break;
+        case 1:
+        cout << "Called from spiltCheck()" << endl;
+        break;
+        case 2:
+        cout << "Called from spiltCheck()" << endl;
+        break;
+        default:
+        cout << "UNKNOWN gameOptionsErrorCheck() call" << endl;
+    }
     if (iterator->cardValue == iterator->next->cardValue){
 
         cout << "TEST PASSED" << endl;
@@ -283,7 +288,6 @@ int Player::gameOptionsCheck() const{
     } else {
 
         cout << "ERROR in Player::check_game_options(): out of bounds check!" << endl;
-        exit(1);
     }
 
     return 0;
@@ -305,7 +309,7 @@ bool Player::bustChecker() const{
 }
 bool Player::splitCheck() const{
 
-    gameOptionsErrorCheck();
+    gameOptionsErrorCheck(0);
 
     resetIterator();
 
@@ -319,7 +323,7 @@ bool Player::splitCheck() const{
 }
 bool Player::doubleDownCheck() const {
     
-    gameOptionsErrorCheck();
+    gameOptionsErrorCheck(1);
 
     char responce;
 
@@ -366,7 +370,7 @@ bool Player::hitStandCheck() const{
 }
 bool Player::naturalsCheck() const{
 
-    gameOptionsErrorCheck();
+    gameOptionsErrorCheck(2);
     
     if (handTotal[1] == 21){
 
@@ -394,7 +398,6 @@ Player::PlayerCard& Player::next() const{
     
     if (iterator == nullptr){
         cout << "ERROR IN next(): CANNOT RETRIEVE VALUE FROM AN EMPTY LIST\n";
-        exit(1);
     } else {
         tempNode = iterator;
         iterator = iterator->next;

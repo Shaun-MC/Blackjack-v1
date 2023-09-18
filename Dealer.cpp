@@ -23,7 +23,6 @@ Dealer::DealerCard::DealerCard(const int suit, const int value){
         break;
         default:
         cout << "ERROR IN DealerCard(const int suit, const int value): INVALID SUIT VALUE!" << endl;
-        exit(1);
     }
 }
 
@@ -73,7 +72,6 @@ bool Dealer::removeFromHand(){
 
     if (head == nullptr){
         cout << "LOGIC ERROR IN removeFromHand(): Cant remove from an empty list";
-        exit(1);
     } else if (head == tail){
        
         delete_Card = head;
@@ -106,7 +104,6 @@ bool Dealer::displayHand() {
 
     if (this->handTotal[0] == 0){
         cout << "ERROR in Dealer::displayHand(): HAND IS EMPTY!" << endl;
-        exit(1);
     } 
 
     bool natFlag = false;
@@ -178,7 +175,6 @@ void Dealer::updateHandTotal(){
     if (head == nullptr) { //TODO feels improper, throw error?
         
         cout << "ERROR IN updateHandTotal(): EMPTY HAND, CAN'T EVALUATE!";
-        exit(1);
     }
     while(this->hasMore()){
         if (this->iterator->card_value >= 10 && this->iterator->card_value < 14){
@@ -230,7 +226,6 @@ void Dealer::updateHandTotal(){
         break;
         default:
         cout << "TOO MANY ACES IN count_hand_total()!" << endl;
-        exit(1);
     }
     
     return;
@@ -274,7 +269,6 @@ Dealer::DealerCard& Dealer::next() const{
     
     if (iterator == nullptr){
         cout << "ERROR IN next(): CANNOT RETRIEVE VALUE FROM AN EMPTY LIST\n";
-        exit(1);
     } else {
         temp_Card = iterator;
         iterator = iterator->next;

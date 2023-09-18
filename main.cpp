@@ -15,7 +15,7 @@ int main(){
 
     int game_options = 0;
 
-    int handPtr[2]; 
+    int handArr[2]; 
     
     deckInstance.initializeDeck(0, 0, 0);
 
@@ -25,8 +25,8 @@ int main(){
 
     for (int i = 0; i < 2; i++){
             
-        deckInstance.getCard(&handPtr[0]);
-        playerInstance.addToHand(handPtr[0], handPtr[1]);
+        deckInstance.getCard(&handArr[0]);
+        playerInstance.addToHand(handArr[0], handArr[1]);
     }
 
     playerInstance.displayPlayerHand();
