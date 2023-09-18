@@ -1,6 +1,9 @@
 #ifndef CONTROLLED_PLAYER_H
 #define CONTROLLED_PLAYER_H
 
+#include "Statistics_Manager.h"
+#include "Statistics_Manager.cpp"
+
 #include <iostream>
 
 using namespace std;
@@ -59,6 +62,8 @@ class Player{
     PlayerCard& next() const;
     void testConnections() const;
     
+    StatsManager statsInstance;
+
     private:
 
     int handSize;
