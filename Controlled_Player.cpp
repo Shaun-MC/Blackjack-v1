@@ -112,17 +112,17 @@ bool Player::removeFromHand(){
 }
 bool Player::displayPlayerHand() { 
 
-    this->updateHandTotal();
+    updateHandTotal();
 
-    if (this->handTotal[0] == 0){
+    if (handTotal[0] == 0){
         cout << "ERROR in display_PlayerHand(): HAND IS EMPTY!" << endl;
     } else {
 
-        cout << "Current Hand Total:  " << this->handTotal[0];
+        cout << "Current Hand Total:  " << handTotal[0];
 
-        if (this->handTotal[1] <= 21 && this->handTotal[1] != 0){
+        if (handTotal[1] <= 21 && handTotal[1] != 0){
             
-            cout << " OR " << this->handTotal[1];
+            cout << " OR " << handTotal[1];
         }
     }
 
@@ -130,9 +130,9 @@ bool Player::displayPlayerHand() {
 
     unsigned int counter = 0;
     
-    this->resetIterator();
+    resetIterator();
 
-    while (this->hasMore()){
+    while (hasMore()){
         
         cout << setw(2);
 
@@ -142,7 +142,7 @@ bool Player::displayPlayerHand() {
             counter = 0;
         }
 
-        switch(this->iterator->cardValue){
+        switch(iterator->cardValue){
             case 1:
             cout << 'A';
             break;
@@ -156,12 +156,12 @@ bool Player::displayPlayerHand() {
             cout << 'K';
             break;
             default:
-            cout << this->iterator->cardValue;
+            cout << iterator->cardValue;
         }
 
-        cout << this->iterator->cardSuitCharacter << "  ";
+        cout << iterator->cardSuitCharacter << "  ";
 
-        this->iterator = this->iterator->next;
+        iterator = iterator->next;
         ++counter;
     }
     cout << endl;
@@ -172,19 +172,19 @@ void Player::updateHandTotal(){ // using handTotal and reseting it every call se
 
     int aceCounter = 0;
 
-    this->handTotal[0] = 0;
-    this->handTotal[1] = 0;
+    handTotal[0] = 0;
+    handTotal[1] = 0;
 
-    this->resetIterator();
+    resetIterator();
 
-    if (head == nullptr) { //TODO feels improper, throw error?
+    if (head == nullptr) { 
         
-        cout << "ERROR INH(): EMPTY HAND, CAN'T EVALUATE!";
+        cout << "ERROR IN updateHandTotal(): EMPTY HAND, CAN'T EVALUATE!";
     }
-    while(this->hasMore()){
-        if (this->iterator->cardValue >= 10 && this->iterator->cardValue < 14){
+    while(hasMore()){
+        if (iterator->cardValue >= 10 && iterator->cardValue < 14){
             
-            this->handTotal[0] += 10;
+            handTotal[0] += 10;
         } 
         
         else if (iterator->cardValue == 1){
@@ -194,10 +194,10 @@ void Player::updateHandTotal(){ // using handTotal and reseting it every call se
         
         else{
         
-            this->handTotal[0] += this->iterator->cardValue;
+            handTotal[0] += iterator->cardValue;
         } 
         
-        this->iterator = this->iterator->next;
+        iterator = iterator->next;
     }
 
     switch(aceCounter){
@@ -205,13 +205,13 @@ void Player::updateHandTotal(){ // using handTotal and reseting it every call se
         break;
         case 1:
 
-        if ((this->handTotal[0] + 11) > 22 ) {   // if adding the 11 to the hand busts it, treat the ace as a 1
+        if ((handTotal[0] + 11) > 22 ) {   // if adding the 11 to the hand busts it, treat the ace as a 1
         
-            this->handTotal[0] += aceCounter;
+            handTotal[0] += aceCounter;
         } else {                                    // else, treat it as a 1 and 11 
             
-            this->handTotal[0] += aceCounter;
-            this->handTotal[1] = this->handTotal[0] + 10;
+            handTotal[0] += aceCounter;
+            handTotal[1] = handTotal[0] + 10;
         }
 
         break;
@@ -219,13 +219,13 @@ void Player::updateHandTotal(){ // using handTotal and reseting it every call se
         case 3:
         case 4:
         
-        if ((this->handTotal[0] + 11) > 22 ) {
+        if ((handTotal[0] + 11) > 22 ) {
             
-            this->handTotal[0] += aceCounter;
+            handTotal[0] += aceCounter;
         } else {
             
-            this->handTotal[0] += aceCounter;
-            this->handTotal[1] = this->handTotal[0] + (11 - (--aceCounter));
+            handTotal[0] += aceCounter;
+            handTotal[1] = handTotal[0] + (11 - (--aceCounter));
         }
 
         break;
@@ -233,39 +233,41 @@ void Player::updateHandTotal(){ // using handTotal and reseting it every call se
         cout << "TOO MANY ACES IN countHandTotal()!" << endl;
     }
     
-    return;
 } 
-void Player::gameOptionsErrorCheck(int calledVal) const{ // doesnt say where it got called
+bool Player::gameOptionsErrorCheck(int calledVal) const{ 
 
     resetIterator();
 
+    bool error = false;
+
     if (head == nullptr){
-        cout << "ERROR in Player::gameOptionsErrorCheck(): empty list" << endl;
+        cout << "ERROR in Player::gameOptionsErrorCheck(): empty hand" << endl;
+        error = true;
     }
     else if (iterator->next == nullptr){
-        cout << "ERROR in Player::gameOptionsErrorCheck(): only 1 node" << endl;
-    } else if (handSize >= 3){
-        cout << "ERROR in Player::gameOptionsErrorCheck(): invaild logic check, more than 2 cards" << endl;
+        cout << "ERROR in Player::gameOptionsErrorCheck(): only 1 card" << endl;
+        error = true;
     }
 
-    switch (calledVal){
-        case 0:
-        cout << "Called from spiltCheck()" << endl;
-        break;
-        case 1:
-        cout << "Called from spiltCheck()" << endl;
-        break;
-        case 2:
-        cout << "Called from spiltCheck()" << endl;
-        break;
-        default:
-        cout << "UNKNOWN gameOptionsErrorCheck() call" << endl;
-    }
-    if (iterator->cardValue == iterator->next->cardValue){
+    if(error){
+        switch (calledVal){
+            case 0:
+            cout << "Called from spiltCheck()" << endl;
+            break;
+            case 1:
+            cout << "Called from spiltCheck()" << endl;
+            break;
+            case 2:
+            cout << "Called from spiltCheck()" << endl;
+            break;
+            default:
+            cout << "UNKNOWN gameOptionsErrorCheck() call" << endl;
+        }
 
-        cout << "TEST PASSED" << endl;
-        return;
+        return false;
     }
+
+    return true;
 }
 int Player::gameOptionsCheck() const{
 
@@ -292,6 +294,18 @@ int Player::gameOptionsCheck() const{
 
     return 0;
 }
+
+bool Player::naturalsCheck() const{
+
+    gameOptionsErrorCheck(2);
+    
+    if (handTotal[1] == 21){
+
+        return true;
+    }
+
+    return false;
+}
 bool Player::bustChecker() const{
 
     // will have to be called afterH is called to eval the correct data at the proper time
@@ -300,7 +314,7 @@ bool Player::bustChecker() const{
 
     // dont have to check handTotal[1], as that index will only have data if it's < = 21
    
-    if(this->handTotal[0] >= 22){
+    if(handTotal[0] >= 22){
 
         return false;
     }
@@ -368,17 +382,8 @@ bool Player::hitStandCheck() const{
 
     return false;
 }
-bool Player::naturalsCheck() const{
 
-    gameOptionsErrorCheck(2);
-    
-    if (handTotal[1] == 21){
 
-        return true;
-    }
-
-    return false;
-}
 
 void Player::resetIterator() const{
 

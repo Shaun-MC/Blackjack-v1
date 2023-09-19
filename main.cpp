@@ -13,15 +13,15 @@ int main(){
     Player playerInstance;
     Dealer dealerInstance;
 
-    int game_options = 0;
+    int gameOptions = 0;
 
     int handArr[2]; 
     
     deckInstance.initializeDeck(0, 0, 0);
 
-    deckInstance.printDeck();
+    playerInstance.statsInstance.setBeginningBalance();
 
-    //playerInstance.statsInstance.set_begining_balance();
+    playerInstance.statsInstance.setBet();
 
     for (int i = 0; i < 2; i++){
             
@@ -31,13 +31,15 @@ int main(){
 
     playerInstance.displayPlayerHand();
 
-    game_options = playerInstance.gameOptionsCheck();
+    gameOptions = playerInstance.gameOptionsCheck();
 
-    /*switch(gameOptions){ // exiting switch statement will then begin the dealer playing his hand
+    switch(gameOptions){ // exiting switch statement will then begin the dealer playing his hand / or not
         
-        case 0:
-        // [ natural hit ]
-        // pay out bet
+        case 0: //[ naturals hit ]
+        cout << "Dealer: Wow, nice! Here's your payout" << endl;
+        cout << "+" << playerInstance.statsInstance.naturalsPayout() << endl;
+       
+        playerInstance.statsInstance.updateBalance(gameOptions);
         break;
         case 1:
         // [ split sequence ]
@@ -76,7 +78,7 @@ int main(){
         // print dealer's face card
         // dealer naturals check
         // jump out of switch statements
-    }*/  
+    }  
 
     return 0;
 }

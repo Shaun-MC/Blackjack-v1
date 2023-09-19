@@ -1,6 +1,8 @@
 #ifndef STATISTICS_MANAGER_H
 #define STATISTICS_MANAGER_H
 
+const float naturalsPayoutRate = 1.5;
+
 class StatsManager{
     public:
 
@@ -12,11 +14,20 @@ class StatsManager{
     void operator += (const StatsManager& rightInstance);
 
     void setBeginningBalance();
+    void setBet();
+
+    void updateBalance(const int gameResult);
+
+    int naturalsPayout() { return currentBet * naturalsPayoutRate; }
+
     void printCurrentStats() const;
 
     //updateFunctions
 
-    unsigned int beginningBalance;
+    private:
+    int beginningBalance;
+    int currentBalance;
+    int currentBet;
 
     unsigned int handsPlayed;
     unsigned int handsWon;
@@ -24,8 +35,6 @@ class StatsManager{
     unsigned int handsDrawed;
 
     unsigned naturalsHit;        
-    unsigned int currentBalance;
-    unsigned int currentBet;
 
     int highestBalance;
     int lowestBalance;
