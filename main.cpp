@@ -19,29 +19,9 @@ int main(){
     
     deckInstance.initializeDeck(0, 0, 0);
 
-    //playerInstance.statsInstance.setBeginningBalance();
+    playerInstance.statsInstance.setBeginningBalance();
     
-    handArr[0] = 1;
-    handArr[1] = 11;
-    
-    dealerInstance.addToHand(handArr[0], handArr[1]);
-
-    handArr[0] = 1;
-    handArr[1] = 1;
-
-    dealerInstance.addToHand(handArr[0], handArr[1]);
-
-    dealerInstance.displayHand();
-
-    /*if (dealerInstance.naturalsCheck()){
-        
-        cout << "RETURNED TRUE!" << endl;
-    }else {
-
-        cout << "RETURNED FALSE" << endl;
-    }*/
-
-    /*do {
+    do {
 
         playerInstance.statsInstance.setBet();
 
@@ -51,19 +31,21 @@ int main(){
             playerInstance.addToHand(handArr[0], handArr[1]);
         }
 
+        handArr[0] = handArr[1] = 0;
+        
         for (int i = 0; i < 2; i++){
             
             deckInstance.getCard(&handArr[0]);
             dealerInstance.addToHand(handArr[0], handArr[1]);
-        }*/
+        }
 
-        //playerInstance.displayPlayerHand();
+        playerInstance.displayPlayerHand();
 
-        //gameOptions = playerInstance.gameOptionsCheck();
+        gameOptions = playerInstance.gameOptionsCheck();
 
-        /*switch(gameOptions){ // exiting switch statement will then begin the dealer playing his hand / or not
+        switch(gameOptions){ 
         
-            case 0: //[ naturals hit ]
+            case 0:
             
             cout << "Dealer: Wow, nice! Here's your payout" << endl;
             cout << "+$" << playerInstance.statsInstance.naturalsPayout() << endl;
@@ -73,7 +55,7 @@ int main(){
             break;
             case 1:     // [ double down sequence ]
             
-            dealerInstance.printFaceCard();
+            dealerInstance.printCard(); //make sure it only prints first card
 
             if(dealerInstance.naturalsCheck()){
 
@@ -110,8 +92,9 @@ int main(){
             // repeat prev step until player has stand or busted
             // jump out of switch statement
             default:
-    }  
-    }while (playerInstance.continuePlayingResponce());*/
+            //error checking
+        }  
+    }while (playerInstance.continuePlayingResponce());
 
     //playerInstance.statsInstance.printCurrentStats();
 

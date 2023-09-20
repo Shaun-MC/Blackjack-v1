@@ -29,7 +29,7 @@ Dealer::DealerCard::DealerCard(const int suit, const int value){
 Dealer::~Dealer(){
 
     handTotal[0] = 0;
-    handTotal[1] = 1;
+    handTotal[1] = 0;
 
     DealerCard* delete_Card = new DealerCard();
     
@@ -92,8 +92,6 @@ bool Dealer::removeFromHand(){ //unnecessary????
 }
 void Dealer::printCard() const{
 
-    resetIterator();
-
     switch(iterator->cardValue){
             case 1:
             cout << 'A';
@@ -112,8 +110,6 @@ void Dealer::printCard() const{
     }
 
     cout << iterator->cardSuitCharacter << "  ";
-
-    cout << endl;
 }
 bool Dealer::naturalsCheck() const {
 
@@ -126,34 +122,28 @@ bool Dealer::naturalsCheck() const {
 }
 bool Dealer::displayHand() { // something wrong w/ hasMore loop
 
+    unsigned int counter = 0;
+
+    resetIterator();
+    
     if (handTotal[0] == 0){
         cout << "ERROR in Dealer::displayHand(): HAND IS EMPTY!" << endl;
-    } 
-
-    bool natFlag = false;
+    }
 
     cout << "Current Hand Total: ";
 
-    if (handTotal[1] == 21 && handSize == 2){
-
-        cout << handTotal[1] << endl;
-        natFlag = true;
-
+    if (handTotal[1] != 0){
+        cout << handTotal[0] << " OR " << handTotal[1] << endl;
     } else {
 
         cout << handTotal[0] << endl;
     }
 
-    unsigned int counter = 0;
-    
-    resetIterator();
+    for (int i = 0; i < handSize; i++){
 
-    while (hasMore()){
-        
         cout << setw(2);
 
         if (counter == 5) {
-            
             cout << endl;
             counter = 0;
         }
@@ -163,6 +153,7 @@ bool Dealer::displayHand() { // something wrong w/ hasMore loop
         iterator = iterator->next;
         ++counter;
     }
+    
     cout << endl;
 
     return true;
