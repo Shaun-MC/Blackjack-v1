@@ -53,6 +53,8 @@ class Player{
 
     bool naturalsCheck() const;
 
+    bool continuePlayingResponce() const;
+
     bool gameOptionsErrorCheck(int calledVal) const;
 
     // function for splits

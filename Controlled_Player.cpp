@@ -275,21 +275,21 @@ int Player::gameOptionsCheck() const{
 
         return 0;
     }
-    else if (splitCheck()){
+    else if (doubleDownCheck()){
         
         return 1; 
-    } else if (doubleDownCheck()){
+    } else if (splitCheck()){
 
         return 2;
-    } else if (hitStandCheck()){ // hit
+    } else if (!hitStandCheck()){ // stand
 
         return 3;
-    } else if (!hitStandCheck()){ // stand
+    } else if (hitStandCheck()){ // hit
 
         return 4;
     } else {
 
-        cout << "ERROR in Player::check_game_options(): out of bounds check!" << endl;
+        cout << "ERROR in Player::check_game_options(): unknown gameplay option!" << endl;
     }
 
     return 0;
@@ -367,20 +367,42 @@ bool Player::hitStandCheck() const{
 
     char responce;
 
-    cout << "Dealer: Would you like to HIT or STAND? (y/n, capitalization matters)" << endl;
+    cout << "Dealer: Would you like to HIT or STAND? (H/S), capitalization matters" << endl;
     cin >> responce;
     
-    while (responce != 'y' && responce != 'n'){
-        cout << "Dealer: INVALID input, try again." << endl;
+    while (responce != 'H' && responce != 'S'){
+        cout << "Dealer: Huh? So HIT or STAND? (Y/N)" << endl;
         cin >> responce;
     }
 
-    if (responce == 'y') {
+    if (responce == 'H') {
 
         return true;
     } 
 
     return false;
+}
+
+bool Player::continuePlayingResponce() const{
+
+    char responce;
+
+    cout << "Dealer: Would you like to play another hand? (Y/N)" << endl;
+    cin >> responce;
+    
+    while (responce != 'Y' && responce != 'N'){ 
+        cout << "Dealer: Huh? So are you playing or not? (Y/N), capitalization matters" << endl;
+        cin >> responce;
+    }
+
+    if (responce == 'Y'){
+        
+        return true;
+    } else{
+
+        cout << "Dealer: Have a great rest of your evening!" << endl;
+        return false;
+    }
 }
 
 

@@ -6,7 +6,7 @@ Dealer::DealerCard::DealerCard(const int suit, const int value){
 
     next = prev = nullptr;
     cardSuit = suit;
-    card_value = value;
+    cardValue = value;
 
     switch(suit){
         case 1: 
@@ -35,7 +35,7 @@ Dealer::~Dealer(){
     
     resetIterator();
 
-    while(this->hasMore()){
+    while(hasMore()){
 
         delete_Card = iterator;
         iterator = iterator->next;
@@ -63,7 +63,9 @@ bool Dealer::addToHand(const int suit, const int value){
         ++handSize;
     }
 
-    insertCard = nullptr;
+    updateHandTotal();
+
+    insertCard = nullptr;   //delete????
     return true;
 }
 bool Dealer::removeFromHand(){
@@ -85,58 +87,11 @@ bool Dealer::removeFromHand(){
     delete delete_Card;
     return true;
 }
-/*bool Dealer::naturalsCheck(int foo) const {
+void Dealer::printCard() const{
 
-    switch(foo){
-        case 1:
+    resetIterator();
 
-    
-
-        break;
-        case 2:
-        
-        break;
-    }
-}*/
-bool Dealer::displayHand() {
-
-    this->updateHandTotal();
-
-    if (this->handTotal[0] == 0){
-        cout << "ERROR in Dealer::displayHand(): HAND IS EMPTY!" << endl;
-    } 
-
-    bool natFlag = false;
-
-    cout << "Current Hand Total: ";
-
-    if (handTotal[1] == 21 && handSize == 2){
-
-        cout << handTotal[1] << endl;
-        natFlag = true;
-    } else if (handTotal[1] != 0){
-
-        cout << handTotal[0] << " OR " << handTotal[1] << endl;
-    } else {
-
-        cout << handTotal[0] << endl;
-    }
-
-    unsigned int counter = 0;
-    
-    this->resetIterator();
-
-    while (this->hasMore()){
-        
-        cout << setw(2);
-
-        if (counter == 5) {
-            
-            cout << endl;
-            counter = 0;
-        }
-
-        switch(this->iterator->card_value){
+    switch(iterator->cardValue){
             case 1:
             cout << 'A';
             break;
@@ -150,12 +105,59 @@ bool Dealer::displayHand() {
             cout << 'K';
             break;
             default:
-            cout << this->iterator->card_value;
+            cout << iterator->cardValue;
+    }
+
+    cout << iterator->cardSuitCharacter << "  ";
+
+    cout << endl;
+}
+bool Dealer::naturalsCheck() const {
+
+    if (handTotal[1] == 21 && handSize == 2){ //handSize == 2 ??unnecessary??
+
+        return true; 
+    }
+
+    return false;
+}
+bool Dealer::displayHand() {
+
+    if (handTotal[0] == 0){
+        cout << "ERROR in Dealer::displayHand(): HAND IS EMPTY!" << endl;
+    } 
+
+    bool natFlag = false;
+
+    cout << "Current Hand Total: ";
+
+    if (handTotal[1] == 21 && handSize == 2){
+
+        cout << handTotal[1] << endl;
+        natFlag = true;
+
+    } else {
+
+        cout << handTotal[0] << endl;
+    }
+
+    unsigned int counter = 0;
+    
+    resetIterator();
+
+    while (hasMore()){
+        
+        cout << setw(2);
+
+        if (counter == 5) {
+            
+            cout << endl;
+            counter = 0;
         }
 
-        cout << this->iterator->cardSuitCharacter << "  ";
+        printCard();
 
-        this->iterator = this->iterator->next;
+        iterator = iterator->next;
         ++counter;
     }
     cout << endl;
@@ -167,32 +169,33 @@ void Dealer::updateHandTotal(){
 
     int aceCounter = 0;
 
-    this->handTotal[0] = 0;
-    this->handTotal[1] = 0;
+    /*Change from resetting the handTotal everytime to a counter that tracks how many cards & which cards have already been counted*/
+    handTotal[0] = 0;
+    handTotal[1] = 0;
 
-    this->resetIterator();
+    resetIterator();
 
     if (head == nullptr) { //TODO feels improper, throw error?
         
         cout << "ERROR IN updateHandTotal(): EMPTY HAND, CAN'T EVALUATE!";
     }
-    while(this->hasMore()){
-        if (this->iterator->card_value >= 10 && this->iterator->card_value < 14){
+    while(hasMore()){
+        if (iterator->cardValue >= 10 && iterator->cardValue < 14){
             
-            this->handTotal[0] += 10;
+            handTotal[0] += 10;
         } 
         
-        else if (iterator->card_value == 1){
+        else if (iterator->cardValue == 1){
             
             ++aceCounter;
         } 
         
         else{
         
-            this->handTotal[0] += this->iterator->card_value;
+            handTotal[0] += iterator->cardValue;
         } 
         
-        this->iterator = this->iterator->next;
+        iterator = iterator->next;
     }
 
     switch(aceCounter){
@@ -200,13 +203,13 @@ void Dealer::updateHandTotal(){
         break;
         case 1:
 
-        if ((this->handTotal[0] + 11) > 22 ) {   // if adding the 11 to the hand busts it, treat the ace as a 1
+        if ((handTotal[0] + 11) > 22 ) {   // if adding the 11 to the hand busts it, treat the ace as a 1
         
-            this->handTotal[0] += aceCounter;
+            handTotal[0] += aceCounter;
         } else {                                    // else, treat it as a 1 and 11 
             
-            this->handTotal[0] += aceCounter;
-            this->handTotal[1] = this->handTotal[0] + 10;
+            handTotal[0] += aceCounter;
+            handTotal[1] = handTotal[0] + 10;
         }
 
         break;
@@ -214,13 +217,13 @@ void Dealer::updateHandTotal(){
         case 3:
         case 4:
         
-        if ((this->handTotal[0] + 11) > 22 ) {
+        if ((handTotal[0] + 11) > 22 ) {
             
-            this->handTotal[0] += aceCounter;
+            handTotal[0] += aceCounter;
         } else {
             
-            this->handTotal[0] += aceCounter;
-            this->handTotal[1] = this->handTotal[0] + (11 - (--aceCounter));
+            handTotal[0] += aceCounter;
+            handTotal[1] = handTotal[0] + (11 - (--aceCounter));
         }
 
         break;
@@ -292,7 +295,7 @@ void Dealer::testConnections() const{
 
     while (iterator != tail){
         if (iterator != iterator->next->prev){
-            cout << "Bad Connection at " << iterator->card_value << endl;
+            cout << "Bad Connection at " << iterator->cardValue << endl;
             return;
         }
         iterator = iterator->next;

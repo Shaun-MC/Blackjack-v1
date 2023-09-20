@@ -11,11 +11,11 @@ class Dealer{
     class DealerCard{   // same thing as PlayerCardCard as both 'hands' are doubly linked lists - make a 'virtual' / abstract class to avoid code reuse ????
         public:
 
-        DealerCard() : next(nullptr), prev(nullptr), cardSuit(0), card_value(0), cardSuitCharacter("")  {}; // default constructor
-        DealerCard(const int cardSuit, const int card_value);
+        DealerCard() : next(nullptr), prev(nullptr), cardSuit(0), cardValue(0), cardSuitCharacter("")  {}; // default constructor
+        DealerCard(const int cardSuit, const int cardValue);
         
         unsigned int cardSuit;
-        unsigned int card_value;
+        unsigned int cardValue;
         string cardSuitCharacter;
 
         DealerCard *next, *prev;
@@ -25,11 +25,13 @@ class Dealer{
     
     ~Dealer();
 
-    bool addToHand(const int cardSuit, const int card_value); 
+    bool addToHand(const int cardSuit, const int cardValue); 
 
-    bool removeFromHand();                 
+    bool removeFromHand();  
+
+    void printCard() const;
     
-    bool naturalsCheck(int foo) const; 
+    bool naturalsCheck() const; 
     
     bool displayHand();
 

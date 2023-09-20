@@ -153,6 +153,9 @@ void StatsManager::updateBalance(int gameResult){
         break;
         case 1:
         
+        break;
+        deafult:
+        cout << "Unfinished" << endl;
     }
     
 }
