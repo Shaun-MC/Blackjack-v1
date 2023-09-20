@@ -13,6 +13,7 @@ class Dealer{
 
         DealerCard() : next(nullptr), prev(nullptr), cardSuit(0), cardValue(0), cardSuitCharacter("")  {}; // default constructor
         DealerCard(const int cardSuit, const int cardValue);
+        //copy constructor & assignment operator
         
         unsigned int cardSuit;
         unsigned int cardValue;

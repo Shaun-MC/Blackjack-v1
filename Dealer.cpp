@@ -47,7 +47,7 @@ Dealer::~Dealer(){
     tail = nullptr;
 }
 
-// copy constructor - assignment operator
+// copy constructor - assignment operator ... 
 
 bool Dealer::addToHand(const int suit, const int value){
 
@@ -55,36 +55,39 @@ bool Dealer::addToHand(const int suit, const int value){
 
     if (head == nullptr){            // 0 Cards;
 
-        head = tail = insertCard;
+        head = insertCard;
+        tail = insertCard;
     } else {                        // many
+        
         insertCard->prev = tail;
         tail->next = insertCard;
         tail = tail->next;
-        ++handSize;
     }
+    
+    ++handSize;
 
     updateHandTotal();
 
-    insertCard = nullptr;   //delete????
+    insertCard = nullptr;  //delete???? - make it work w/ proper c.c. & = operator
     return true;
 }
-bool Dealer::removeFromHand(){
+bool Dealer::removeFromHand(){ //unnecessary????
 
-    DealerCard* delete_Card = new DealerCard();
+    DealerCard* deleteCard = new DealerCard();
 
     if (head == nullptr){
         cout << "LOGIC ERROR IN removeFromHand(): Cant remove from an empty list";
     } else if (head == tail){
        
-        delete_Card = head;
+        deleteCard = head;
         head = tail = nullptr;
     } else {
 
-        delete_Card = tail;
+        deleteCard = tail;
         tail = tail->prev;
     }
 
-    delete delete_Card;
+    delete deleteCard;
     return true;
 }
 void Dealer::printCard() const{
@@ -121,7 +124,7 @@ bool Dealer::naturalsCheck() const {
 
     return false;
 }
-bool Dealer::displayHand() {
+bool Dealer::displayHand() { // something wrong w/ hasMore loop
 
     if (handTotal[0] == 0){
         cout << "ERROR in Dealer::displayHand(): HAND IS EMPTY!" << endl;
@@ -170,33 +173,29 @@ void Dealer::updateHandTotal(){
     int aceCounter = 0;
 
     /*Change from resetting the handTotal everytime to a counter that tracks how many cards & which cards have already been counted*/
-    handTotal[0] = 0;
-    handTotal[1] = 0;
 
     resetIterator();
 
-    if (head == nullptr) { //TODO feels improper, throw error?
-        
-        cout << "ERROR IN updateHandTotal(): EMPTY HAND, CAN'T EVALUATE!";
-    }
-    while(hasMore()){
-        if (iterator->cardValue >= 10 && iterator->cardValue < 14){
-            
-            handTotal[0] += 10;
-        } 
-        
-        else if (iterator->cardValue == 1){
-            
-            ++aceCounter;
-        } 
-        
-        else{
-        
-            handTotal[0] += iterator->cardValue;
-        } 
+    if (head == nullptr){ //0 cards, function won't ever card called w/out cards in hand but who knows
+        cout << "updateHandTotal(): no cards in hand" << endl;
+
+    } 
+
+    for (int i = 1; i < handSize; i++){
         
         iterator = iterator->next;
     }
+
+    if (iterator->cardValue >= 10 && iterator->cardValue < 14){
+            
+        handTotal[0] += 10;
+    } else if (iterator->cardValue == 1){
+            
+        ++aceCounter;
+    } else{
+        
+        handTotal[0] += iterator->cardValue;
+    } 
 
     switch(aceCounter){
         case 0:
@@ -228,10 +227,8 @@ void Dealer::updateHandTotal(){
 
         break;
         default:
-        cout << "TOO MANY ACES IN count_hand_total()!" << endl;
+        cout << "TOO MANY ACES IN updateHandTotal()!" << endl;
     }
-    
-    return;
 }
 bool Dealer::bustChecker() const{
 
