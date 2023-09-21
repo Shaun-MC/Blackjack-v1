@@ -255,10 +255,10 @@ bool Player::gameOptionsErrorCheck(int calledVal) const{
             cout << "Called from spiltCheck()" << endl;
             break;
             case 1:
-            cout << "Called from spiltCheck()" << endl;
+            cout << "INCOMPLETE" << endl;
             break;
             case 2:
-            cout << "Called from spiltCheck()" << endl;
+            cout << "Called from doubleDownCheck()" << endl;
             break;
             default:
             cout << "UNKNOWN gameOptionsErrorCheck() call" << endl;
@@ -271,20 +271,32 @@ bool Player::gameOptionsErrorCheck(int calledVal) const{
 }
 int Player::gameOptionsCheck() const{
 
-    if (naturalsCheck()){
+    char responce;
 
-        return 0;
-    }
-    else if (doubleDownCheck()){
+    if (naturalsCheck()) {
         
+        return 0;
+    } else if (splitCheck()) {
+    
         return 1; 
-    } else if (splitCheck()){
+    } 
+    
+    cout << "Dealer: Would you like to Double Down, Hit or Stand? (D for D.D, H for Hit, S for Stand, capitalization matters)" << endl;
+    cin >> responce;
+
+    while (responce != 'D' && responce != 'H' && responce != 'S'){ // same output per digit 'glitch'
+
+        cout << "Dealer: Invalid Input, please Try Again. (D for D.D, H for Hit, S for Stand, capitalization matters)" << endl;
+        cin >> responce;
+    }
+
+    if (responce == 'D'){
 
         return 2;
-    } else if (!hitStandCheck()){ // stand
+    } else if (responce == 'H'){ // hit sequence
 
         return 3;
-    } else if (hitStandCheck()){ // hit
+    } else if (responce == 'S'){ // stand
 
         return 4;
     } else {
@@ -295,17 +307,6 @@ int Player::gameOptionsCheck() const{
     return 0;
 }
 
-bool Player::naturalsCheck() const{
-
-    gameOptionsErrorCheck(2);
-    
-    if (handTotal[1] == 21){
-
-        return true;
-    }
-
-    return false;
-}
 bool Player::bustChecker() const{
 
     // will have to be called afterH is called to eval the correct data at the proper time
@@ -321,9 +322,22 @@ bool Player::bustChecker() const{
 
     return true;
 }
-bool Player::splitCheck() const{
+
+bool Player::naturalsCheck() const{
 
     gameOptionsErrorCheck(0);
+    
+    if (handTotal[1] == 21){
+
+        return true;
+    }
+
+    return false;
+}
+
+bool Player::splitCheck() const{
+
+    gameOptionsErrorCheck(1);
 
     resetIterator();
 
@@ -337,12 +351,13 @@ bool Player::splitCheck() const{
 }
 bool Player::doubleDownCheck() const {
     
-    gameOptionsErrorCheck(1);
+    gameOptionsErrorCheck(2);
 
     char responce;
+    
 
     if (handTotal[0] >= 8 && handTotal[0] <= 11) {
-        cout << "Dealer: Care to Double Down? (y/n, captilization matters)" << endl;
+        cout << "Dealer: Care to Double Down? Y/N, captilization matters)" << endl;
         cin >> responce;
     } else {
     

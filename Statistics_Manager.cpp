@@ -3,6 +3,8 @@
 #include <iostream>
 #include <iomanip>
 
+using namespace std;
+
 StatsManager::StatsManager(){  // untested
 
     beginningBalance = currentBalance = currentBet = 0;
@@ -116,32 +118,31 @@ void StatsManager::setBeginningBalance(){
     }
 
     currentBalance = beginningBalance;
+    
+    highestBalance = beginningBalance;
+    lowestBalance = beginningBalance;
 }
 
 void StatsManager::setBet(){
 
-    cout << "Dealer: So how much would you like to bet?" << endl;
+    cout << "Dealer: So how much would you like to bet? ($)" << endl;
     cin >> currentBet;
 
-    while (currentBet >= currentBalance || currentBet < 0){
+    while (currentBet > currentBalance || currentBet < 0){
         
         if (currentBet < 0){
 
             cout << "Dealer: You can't do that." << endl;
         }
 
-        if (currentBet >= currentBalance){
+        if (currentBet > currentBalance){
             
             cout << "Dealer: Sorry, can't bet more than you have at the table." << endl;    
         }
         
-        cout << "Dealer: So how much are you really betting?" << endl;
+        cout << "Dealer: So how much are you really betting? ($)" << endl;
         cin >> currentBet; 
     }
-
-    currentBalance -= currentBet;
-
-    return;
 }
 
 void StatsManager::updateBalance(int gameResult){
@@ -150,6 +151,9 @@ void StatsManager::updateBalance(int gameResult){
     switch(gameResult){
         case 0:
         currentBalance += naturalsPayout();
+        
+        ++handsWon;
+        ++naturalsHit;
         break;
         case 1:
         
@@ -157,16 +161,45 @@ void StatsManager::updateBalance(int gameResult){
         deafult:
         cout << "Unfinished" << endl;
     }
-    
+
+    updateStatistics();
+
+    ++handsPlayed;
 }
-void StatsManager::printCurrentStats() const { // untested
+
+void StatsManager::updateStatistics() {
+
+    if (highestBalance < currentBalance){
+        
+        highestBalance = currentBalance;
+    }
+
+    if (currentBalance < lowestBalance){
+
+        lowestBalance = currentBalance;
+    }
+}
+
+void StatsManager::updateFinalStatistics(){
+
+    if (beginningBalance < highestBalance){
+
+        totalProfit = highestBalance - beginningBalance;
+    }
+
+    if (lowestBalance < beginningBalance){
+
+        totalLosses = beginningBalance - lowestBalance;
+    }
+}
+void StatsManager::printGameStats() const { // untested
     
     cout << "END OF GAME STATISTICS" << endl;
     cout << " ";
 
     for (int i = 0; i < 30; i++) cout << '-';
 
-    cout << "\n| Hands Played: " << setw(14) << totalProfit << " |\n|" << setw(32) << "|\n";
+    cout << "\n| Hands Played: " << setw(14) << handsPlayed << " |\n|" << setw(32) << "|\n";
 
     cout << "| Hands Won: " << setw(17) << handsWon << " |\n|" << setw(32) << "|\n"; 
 
@@ -178,7 +211,7 @@ void StatsManager::printCurrentStats() const { // untested
 
     cout << "| Starting Balance: " << setw(10) << beginningBalance << " |\n|" << setw(32) << "|\n"; 
     
-    cout << "| Profit: " << setw(20) << handsPlayed << " |\n|" << setw(32) << "|\n";
+    cout << "| Profit: " << setw(20) << totalProfit << " |\n|" << setw(32) << "|\n";
 
     cout << "| Total Losses: " << setw(14) << totalLosses << " |\n|" << setw(32) << "|\n";
 

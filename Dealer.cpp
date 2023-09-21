@@ -92,6 +92,10 @@ bool Dealer::removeFromHand(){ //unnecessary????
 }
 void Dealer::printCard() const{
 
+    resetIterator(); // untest interactions w/ displayHand, updateHandTotal, 
+
+    cout << "DEALER'S UP CARD: ";
+
     switch(iterator->cardValue){
             case 1:
             cout << 'A';
@@ -113,7 +117,7 @@ void Dealer::printCard() const{
 }
 bool Dealer::naturalsCheck() const {
 
-    if (handTotal[1] == 21 && handSize == 2){ //handSize == 2 ??unnecessary??
+    if (handTotal[1] == 21 && handSize == 2){
 
         return true; 
     }

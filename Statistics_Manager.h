@@ -20,9 +20,14 @@ class StatsManager{
 
     int naturalsPayout() { return currentBet * naturalsPayoutRate; }
 
-    void printCurrentStats() const;
+    void updateStatistics();
+    void updateFinalStatistics();
+    
+    void printGameStats() const;
 
     //updateFunctions
+
+    int printCurrentBalance() const { return currentBalance; }
 
     private:
     int beginningBalance;

@@ -7,6 +7,8 @@
 #include "Dealer.h"
 #include "Dealer.cpp"
 
+#include <unistd.h>
+
 int main(){
 
     Deck deckInstance;
@@ -19,8 +21,18 @@ int main(){
     
     deckInstance.initializeDeck(0, 0, 0);
 
-    playerInstance.statsInstance.setBeginningBalance();
+    //playerInstance.statsInstance.setBeginningBalance();
     
+    handArr[0] = 2;
+    handArr[1] = 5;
+
+    playerInstance.addToHand(handArr[0], handArr[1]);
+
+    handArr[0] = 1;
+    handArr[1] = 5;
+
+    playerInstance.addToHand(handArr[0], handArr[1]);
+
     do {
 
         playerInstance.statsInstance.setBet();
@@ -39,33 +51,45 @@ int main(){
             dealerInstance.addToHand(handArr[0], handArr[1]);
         }
 
+        if (dealerInstance.naturalsCheck()){
+            
+        }
+
         playerInstance.displayPlayerHand();
+
+        dealerInstance.printCard();
 
         gameOptions = playerInstance.gameOptionsCheck();
 
         switch(gameOptions){ 
         
-            case 0:
-            
+            /*case 0:
+
+            usleep(1000000); 
+
             cout << "Dealer: Wow, nice! Here's your payout" << endl;
             cout << "+$" << playerInstance.statsInstance.naturalsPayout() << endl;
        
             playerInstance.statsInstance.updateBalance(gameOptions);
 
+            cout << playerInstance.statsInstance.printCurrentBalance() << endl;*/
+
             break;
-            case 1:     // [ double down sequence ]
-            
-            dealerInstance.printCard(); //make sure it only prints first card
+            case 1:     // [ split ]
 
-            if(dealerInstance.naturalsCheck()){
 
-            }
-            // dealer naturals check
-            // have the player double their bet
-            // give the player 1 card
+            //if(dealerInstance.naturalsCheck()){ }
+
+
+            // create a new player hand
+            // add the last card of the old hand to the new hand
+            // remove the last card of the old hand
+            // ask to hit or stand on the first hand                            
+            // ask to hit or stand on the second hand                           
+            // repeated prev 2 steps until both hands have stand or busted
             // jump out of switch statement
-
-            case 2:     // [ split ]
+            break;
+            case 2:     // [ double down ]
             // dealer naturals check
             // create a new player hand
             // add the last card of the old hand to the new hand
@@ -74,16 +98,17 @@ int main(){
             // ask to hit or stand on the second hand                           
             // repeated prev 2 steps until both hands have stand or busted
             // jump out of switch statement
-            
-        
-            case 3:     // [ stand ]
-            
-            // print dealer's 'face' card
+
             // dealer naturals check
-            // jump out of switch statements
+            // have the player double their bet
+            // give the player 1 card
+            // jump out of switch statement
+            
+            break;
+            case 3:   // [ hit - stand sequence ]
+            
             
 
-            case 4:     // [ hit - stand sequence ]
             // print dealer's face card
             // dealer naturals check
             // give player additional card
@@ -91,12 +116,23 @@ int main(){
             // ask to hit or stand                                              
             // repeat prev step until player has stand or busted
             // jump out of switch statement
+            
+            break;
+            case 4:  // stand
+            
+            // print dealer's 'face' card
+            // dealer naturals check
+            // jump out of switch statements
+            
             default:
+
+            break;
             //error checking
         }  
     }while (playerInstance.continuePlayingResponce());
 
-    //playerInstance.statsInstance.printCurrentStats();
+    playerInstance.statsInstance.updateFinalStatistics();
+    playerInstance.statsInstance.printGameStats();
 
     return 0;
 }
