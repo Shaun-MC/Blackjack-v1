@@ -68,7 +68,10 @@ bool Dealer::addToHand(const int suit, const int value){
 
     updateHandTotal();
 
+    resetIterator();
+
     insertCard = nullptr;  //delete???? - make it work w/ proper c.c. & = operator
+    
     return true;
 }
 bool Dealer::removeFromHand(){ //unnecessary????
@@ -92,10 +95,6 @@ bool Dealer::removeFromHand(){ //unnecessary????
 }
 void Dealer::printCard() const{
 
-    resetIterator(); // untest interactions w/ displayHand, updateHandTotal, 
-
-    cout << "DEALER'S UP CARD: ";
-
     switch(iterator->cardValue){
             case 1:
             cout << 'A';
@@ -115,15 +114,7 @@ void Dealer::printCard() const{
 
     cout << iterator->cardSuitCharacter << "  ";
 }
-bool Dealer::naturalsCheck() const {
 
-    if (handTotal[1] == 21 && handSize == 2){
-
-        return true; 
-    }
-
-    return false;
-}
 bool Dealer::displayHand() { // something wrong w/ hasMore loop
 
     unsigned int counter = 0;
@@ -134,7 +125,7 @@ bool Dealer::displayHand() { // something wrong w/ hasMore loop
         cout << "ERROR in Dealer::displayHand(): HAND IS EMPTY!" << endl;
     }
 
-    cout << "Current Hand Total: ";
+    cout << "\nDealer: Current Hand Total: ";
 
     if (handTotal[1] != 0){
         cout << handTotal[0] << " OR " << handTotal[1] << endl;
@@ -163,17 +154,15 @@ bool Dealer::displayHand() { // something wrong w/ hasMore loop
     return true;
 }
 
-void Dealer::updateHandTotal(){
+void Dealer::updateHandTotal(){ // calculation & display error w/ aces - handTotal[1] doesn't get flushed when it's no longer needed
 
     int aceCounter = 0;
 
-    /*Change from resetting the handTotal everytime to a counter that tracks how many cards & which cards have already been counted*/
-
     resetIterator();
 
-    if (head == nullptr){ //0 cards, function won't ever card called w/out cards in hand but who knows
+    if (head == nullptr){ // branch won't ever enter - but who knows
+        
         cout << "updateHandTotal(): no cards in hand" << endl;
-
     } 
 
     for (int i = 1; i < handSize; i++){
@@ -197,10 +186,11 @@ void Dealer::updateHandTotal(){
         break;
         case 1:
 
-        if ((handTotal[0] + 11) > 22 ) {   // if adding the 11 to the hand busts it, treat the ace as a 1
+        if ((handTotal[0] + 11) > 22 ) {   // if adding the 11 to the hand busts it, treat the ace as a 1 & flush '2nd' hand
         
             handTotal[0] += aceCounter;
-        } else {                                    // else, treat it as a 1 and 11 
+            handTotal[1] = 0;
+        } else {                           // else, treat it as a 1 and 11 
             
             handTotal[0] += aceCounter;
             handTotal[1] = handTotal[0] + 10;
@@ -224,6 +214,16 @@ void Dealer::updateHandTotal(){
         default:
         cout << "TOO MANY ACES IN updateHandTotal()!" << endl;
     }
+}
+
+bool Dealer::naturalsCheck() const {
+
+    if (handTotal[1] == 21 && handSize == 2){
+
+        return true; 
+    }
+
+    return false;
 }
 bool Dealer::bustChecker() const{
 

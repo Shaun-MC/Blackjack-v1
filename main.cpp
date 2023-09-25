@@ -16,6 +16,7 @@ int main(){
     Dealer dealerInstance;
 
     int handArr[2];
+    const int gameResult[5] = {0,1,2,3,4};
 
     int gameOptions = 0;  
     
@@ -51,84 +52,75 @@ int main(){
             dealerInstance.addToHand(handArr[0], handArr[1]);
         }
 
-        if (dealerInstance.naturalsCheck()){
-            
-        }
-
         playerInstance.displayPlayerHand();
 
+        cout << "DEALER UP CARD: ";
         dealerInstance.printCard();
 
-        gameOptions = playerInstance.gameOptionsCheck();
+        if (dealerInstance.naturalsCheck()){
+            
+            dealerInstance.displayHand();
+            cout << "Dealer: Looks like I hit a natural." << endl;
+            playerInstance.statsInstance.updateBalance(gameResult[4]);
 
-        switch(gameOptions){ 
+        } else {
+            
+            gameOptions = playerInstance.gameOptionsCheck();
+
+            switch(gameOptions){ 
         
-            /*case 0:
+                case 0:
 
-            usleep(1000000); 
+                usleep(1000000); 
 
-            cout << "Dealer: Wow, nice! Here's your payout" << endl;
-            cout << "+$" << playerInstance.statsInstance.naturalsPayout() << endl;
-       
-            playerInstance.statsInstance.updateBalance(gameOptions);
+                cout << "Dealer: Wow, nice! Here's your payout" << endl;
 
-            cout << playerInstance.statsInstance.printCurrentBalance() << endl;*/
+                cout << "+" << playerInstance.statsInstance.naturalsPayout();
 
-            break;
-            case 1:     // [ split ]
+                playerInstance.statsInstance.updateBalance(gameOptions);
 
+                cout << "Total Balance: " << playerInstance.statsInstance.printCurrentBalance() << endl;
 
-            //if(dealerInstance.naturalsCheck()){ }
+                break;
+                case 1:     // [ split ]
 
+                // create a new player hand
+                // add the last card of the old hand to the new hand
+                // remove the last card of the old hand
+                // ask to hit or stand on the first hand                            
+                // ask to hit or stand on the second hand                           
+                // repeated prev 2 steps until both hands have stand or busted
+                // jump out of switch statement
+                break;
+                case 2:     // [ double down ]
+  
 
-            // create a new player hand
-            // add the last card of the old hand to the new hand
-            // remove the last card of the old hand
-            // ask to hit or stand on the first hand                            
-            // ask to hit or stand on the second hand                           
-            // repeated prev 2 steps until both hands have stand or busted
-            // jump out of switch statement
-            break;
-            case 2:     // [ double down ]
-            // dealer naturals check
-            // create a new player hand
-            // add the last card of the old hand to the new hand
-            // remove the last card of the old hand
-            // ask to hit or stand on the first hand                            
-            // ask to hit or stand on the second hand                           
-            // repeated prev 2 steps until both hands have stand or busted
-            // jump out of switch statement
-
-            // dealer naturals check
-            // have the player double their bet
-            // give the player 1 card
-            // jump out of switch statement
+                // have the player double their bet
+                // give the player 1 card
+                // jump out of switch statement
             
-            break;
-            case 3:   // [ hit - stand sequence ]
-            
-            
+                break;
+                case 3:   // [ hit - stand sequence ]
 
-            // print dealer's face card
-            // dealer naturals check
-            // give player additional card
-            // check bust
-            // ask to hit or stand                                              
-            // repeat prev step until player has stand or busted
-            // jump out of switch statement
+                // give player additional card
+                // check bust
+                // ask to hit or stand                                              
+                // repeat prev step until player has stand or busted
+                // jump out of switch statement
             
-            break;
-            case 4:  // stand
+                break;
+                case 4:  // stand
             
-            // print dealer's 'face' card
-            // dealer naturals check
-            // jump out of switch statements
+                // print dealer's 'face' card
+                // dealer naturals check
+                // jump out of switch statements
             
-            default:
+                default:
 
-            break;
-            //error checking
-        }  
+                break;
+                //error checking
+            }  
+        }
     }while (playerInstance.continuePlayingResponce());
 
     playerInstance.statsInstance.updateFinalStatistics();

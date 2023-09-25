@@ -25,7 +25,7 @@ class StatsManager{
     
     void printGameStats() const;
 
-    //updateFunctions
+    int getCurrentBet() { return currentBet; }
 
     int printCurrentBalance() const { return currentBalance; }
 

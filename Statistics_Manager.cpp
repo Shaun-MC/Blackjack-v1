@@ -143,28 +143,46 @@ void StatsManager::setBet(){
         cout << "Dealer: So how much are you really betting? ($)" << endl;
         cin >> currentBet; 
     }
+
+    ++handsPlayed;
 }
 
-void StatsManager::updateBalance(int gameResult){
+void StatsManager::updateBalance(int gameResult){ // untested
     
     //error checking
-    switch(gameResult){
-        case 0:
+    switch(gameResult){ 
+        case 0:                                // natural                                                        // natural 
         currentBalance += naturalsPayout();
         
         ++handsWon;
         ++naturalsHit;
-        break;
-        case 1:
         
         break;
-        deafult:
-        cout << "Unfinished" << endl;
+        case 1:                                 // standard & 1 split hand win
+        
+        break;
+
+        case 2:                                 // double down & both splits hands win
+        break;
+
+        case 3:                                 // double down & both split hands loss
+        break;
+
+        case 4:                                 // standards loss
+
+        currentBalance -= currentBet;
+        ++handsLost;
+        
+        break;
+
+        case 5:                                 // draw??
+        break;
+
+        default:
+        cout << "ERROR in updateBalance(): unknown gameResult" << endl;
     }
 
     updateStatistics();
-
-    ++handsPlayed;
 }
 
 void StatsManager::updateStatistics() {

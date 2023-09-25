@@ -1,18 +1,33 @@
 #include <iostream>
 
+#include "Dealer.h"
+#include "Dealer.cpp"
+
+#include "Deck.h"
+#include "Deck.cpp"
+
 using namespace std;
 
 int main() {
     
-    char responce;
+    Dealer dealerInstance;
+    Deck deckInstance;
 
-    cout << "Dealer: Would you like to Double Down, Hit or Stand? (D for D.D, H for Hit, S for Stand, capitalization matters)" << endl;
-    cin >> responce;
+    deckInstance.initializeDeck(0,0,0);
 
-    while (responce != 'D' && responce != 'H' && responce != 'S'){
+    int handArr[2];
 
-        cout << "Dealer: Invalid Input, please Try Again. (D for D.D, H for Hit, S for Stand, capitalization matters)" << endl;
-        cin >> responce;
+    for (int i = 0; i < 3; i++){
+            
+            deckInstance.getCard(&handArr[0]);
+            dealerInstance.addToHand(handArr[0], handArr[1]);
     }
 
+    cout << "DEALER UP CARD: ";
+
+    dealerInstance.printCard();
+
+    dealerInstance.displayHand();
+
+    return 0;
 }

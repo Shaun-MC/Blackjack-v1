@@ -8,7 +8,7 @@ using namespace std;
 class Dealer{
     public:
 
-    class DealerCard{   // same thing as PlayerCardCard as both 'hands' are doubly linked lists - make a 'virtual' / abstract class to avoid code reuse ????
+    class DealerCard{   // similar class as PlayerCardCard as both 'hands' are doubly linked lists - eventually make a 'virtual' / abstract class 
         public:
 
         DealerCard() : next(nullptr), prev(nullptr), cardSuit(0), cardValue(0), cardSuitCharacter("")  {}; // default constructor
@@ -32,11 +32,11 @@ class Dealer{
 
     void printCard() const;
     
-    bool naturalsCheck() const; 
-    
     bool displayHand();
 
     void updateHandTotal(); 
+
+    bool naturalsCheck() const;
 
     bool bustChecker() const;
 

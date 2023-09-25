@@ -34,3 +34,13 @@ _Ran 3 Times_
 ## Added updateStatistics() and updateFinalStatistics() - (9/21/23 - 10:52AM)
 
 
+# commit actual_reinforcing_Dealer (9/20/23 - ???)
+
+## minor fixes in Dealer::printCard() & Dealer::displayHand so up-card and entire hand prints in desired order
+### _placed resetIterator() in correct locations_
+
+## corrected display error in Dealer::updateHandTotal - 
+### _flushing handTotal[1] after it's no longer needed_
+
+## added correct switch cases for winning/losing hands in Player::Statistics::updateBalance() 
+
