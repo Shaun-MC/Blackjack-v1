@@ -50,7 +50,7 @@ class Player{
     bool doubleDownCheck() const; 
 
     bool hitStandCheck() const;
-
+    
     bool naturalsCheck() const;
 
     bool continuePlayingResponce() const;

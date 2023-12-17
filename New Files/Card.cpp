@@ -35,3 +35,33 @@ Card::Card(const int suit, const int value) {
         cerr << "ERROR: Card(int, int): INVALID SUIT ERROR" << endl;
     }
 }
+
+int Card::suit() const {
+
+    return this->suit_;
+}
+
+int Card::value() const {
+
+    return this->value_;
+}
+
+void Card::set_suit(const int suit) {
+
+    this->suit_ = suit;
+} 
+
+void Card::set_value(const int value) {
+
+    this->value_ = value;
+}
+
+bool Card::operator == (const Card& rval) {
+
+    return (this->suit() == rval.suit() && this->value() == rval.value()) ? true : false;
+}
+
+bool Card::operator != (const Card& rval) {
+
+    return (*this == rval) ? false : true;
+}

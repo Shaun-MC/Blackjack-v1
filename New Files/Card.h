@@ -15,9 +15,12 @@ class Card {
   int suit() const;
   int value() const;
 
-  void set_suit(int suit);
+  void set_suit(const int suit);
   void set_value(int value);
- 
+
+  bool operator == (const Card& rval);
+  bool operator != (const Card& rval);
+
  private:
   
   unsigned int suit_;

@@ -1,6 +1,8 @@
 #ifndef HAND_H
 #define HAND_H
 
+#include "Card.h"
+
 class Hand {
  public:
 
@@ -8,7 +10,9 @@ class Hand {
   
   struct Node {
 
-
+    Card card;
+    Node* next;
+    Node* prev;
   };
 
 };
