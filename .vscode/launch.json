@@ -1,13 +1,17 @@
 {
   "version": "0.2.0",
   "configurations": [
-    {
-      "name": "C/C++ Runner: Debug Session",
-      "type": "lldb",
-      "request": "launch",
-      "args": [],
-      "cwd": "/Users/shaun/Desktop/Basics/Blackjack-v1",
-      "program": "/Users/shaun/Desktop/Basics/Blackjack-v1/build/Debug/outDebug"
-    }
+      {
+          "name": "(lldb) Launch",
+          "type": "cppdbg",
+          "request": "launch",
+          "program": "${fileDirname}/${fileBasenameNoExtension}",
+          "args": ["1", "3", "4", "4", "3"],
+          "stopAtEntry": false,
+          "cwd": "${fileDirname}",
+          "environment": [],
+          "externalConsole": false,
+          "MIMode": "lldb"
+      }
   ]
 }
