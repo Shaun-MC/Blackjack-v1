@@ -1,5 +1,6 @@
 #include "Card.h"
 
+// Constructors
 Card::Card() {
 
     this->suit_ = 0;
@@ -36,6 +37,7 @@ Card::Card(const int suit, const int value) {
     }
 }
 
+// Getters - Setters
 int Card::suit() const {
 
     return this->suit_;
@@ -44,6 +46,11 @@ int Card::suit() const {
 int Card::value() const {
 
     return this->value_;
+}
+
+string Card::suit_character() const {
+
+    return this->suit_character_;
 }
 
 void Card::set_suit(const int suit) {
@@ -56,6 +63,7 @@ void Card::set_value(const int value) {
     this->value_ = value;
 }
 
+// Operator Overloads
 bool Card::operator == (const Card& rval) {
 
     return (this->suit() == rval.suit() && this->value() == rval.value()) ? true : false;
@@ -65,3 +73,43 @@ bool Card::operator != (const Card& rval) {
 
     return (*this == rval) ? false : true;
 }
+
+ostream& operator << (ostream& ostrm, const Card& output) {
+
+    cout << output.suit_character();
+
+    switch(output.value()) {
+
+        case 1: 
+        cout << "A";
+        break;
+
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+        case 10: 
+        cout << output.value();
+
+        case 11: 
+        cout << "J";
+        break;
+
+        case 12:
+        cout << "Q";
+        break;
+
+        case 13:
+        cout << "K";
+        break;
+
+        default:
+        cout << "Erorr: Card::operator << | Invalid output.value() digit [1,14]";
+        break;
+    }
+}
+
