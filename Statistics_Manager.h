@@ -6,8 +6,7 @@ const float naturalsPayoutRate = 1.5;
 class StatsManager{
     public:
 
-    StatsManager() ;
-    //~StatsManager();    // unnecessary??? - not using new & variables are only ints
+    StatsManager();
     StatsManager(const StatsManager& rightInstance);
 
     void operator = (const StatsManager& rightInstance);

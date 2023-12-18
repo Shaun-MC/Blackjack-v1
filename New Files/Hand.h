@@ -3,6 +3,10 @@
 
 #include "Card.h"
 
+#include <queue>
+
+// Make it a Queue
+
 class Hand {
  public:
   
