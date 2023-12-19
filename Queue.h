@@ -12,12 +12,10 @@ class Queue {
   // Constructors - Destructor
   Queue();
   Queue(const Queue& rval);
-
-  ~Queue();
   
   // Getters - Setters
-  Card& front() const;
-  Card& back() const;
+  int front_index() const;
+  int back_index() const;
 
   int length() const;
 
@@ -41,9 +39,6 @@ class Queue {
 
   // Private Data Members
   vector<Card> vec_;
-  
-  Card* front_;
-  Card* back_;
 
   int front_index_;
   int back_index_;
