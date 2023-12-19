@@ -1,120 +1,152 @@
 #include "Hand.h"
 
 // Constructors
-Hand::Hand() { // Untested
+Hand::Hand() : count_(0), ace_counter_(0) {
 
     this->hand_totals[0] = this->hand_totals[1] = 0;
-
-    this->size_ = 0;
-
-    this->ace_counter_ = 0;
 }
 
-Hand::Hand(const Hand& rval) { // Untested
+Hand::Hand(const Hand& rval) : count_(rval.count()), ace_counter_(rval.ace_counter_) {
 
-}
+    this->hand_totals[0] = rval.hand_totals[0];
+    this->hand_totals[1] = rval.hand_totals[1];
 
-Hand::~Hand() { // Untested
-
-    for (int i = 0; i < this->size(); i++) {
-
-        this->RemoveCardFromHand();
-    }
+    *this = rval;
 }
 
 // Getter
-int Hand::size() const { // Untested
+int Hand::count() const {
 
-    return this->size_;
+    return this->count_;
+}
+
+int Hand::ace_counter() const {
+
+    return this->ace_counter_;
+}
+
+int Hand::hand_totals0() const {
+
+    return this->hand_totals[0];
+}
+
+int Hand::hand_totals1() const {
+
+    return this->hand_totals[1];
 }
 
 // Actions
-void Hand::AddCardToHand(const int suit, const int value) { // Untested
+void Hand::AddCardToHand(const Card& insert_card) {
 
-    Card* insert_card = new Card
-    this->hand_->Pop()
+    this->hand_.Push(insert_card);
 
-    if (value == 1) {
+    if (insert_card.value() == 1) {
 
         ++this->ace_counter_;
     }
 
+    ++this->count_;
+
     UpdateHandTotal();
 }
 
-void Hand::RemoveCardFromHand() { // Untested
+void Hand::RemoveCardFromHand() { // Aces - Wrong
+    
+    Card* temp = new Card();
 
-    Node* delete_node = this->head_;
+    this->hand_.front(*temp); // Retrieve the eventually Pop'ed Card
 
-    this->head_ = this->head_->prev;
+    bool ace_flag = (this->hand_totals[1] == 0) ? false : true;  // No Ace : Ace
 
-    delete delete_node->card;
-    delete delete_node;
+    if (temp->value() == 1) { // Ace
+
+        if (this->ace_counter() < 2) {
+
+            hand_totals[1] -= 11;
+        }
+        
+        hand_totals[0] -= 1;
+        --this->ace_counter_;
+
+    } else if (temp->value() >= 10 && temp->value() <= 13) { // 10 thru King
+
+        if (ace_flag) {
+
+            hand_totals[1] -= 10;
+        }
+
+        hand_totals[0] -= 10;
+
+    } else { // Any other card
+
+        if (ace_flag) {
+
+            hand_totals[1] -= temp->value();
+        } 
+
+        hand_totals[0] -= temp->value();
+    }
+
+    this->hand_.Pop();
+    
+    --this->count_;
+
+    delete temp;
 }
 
-void Hand::DisplayHand() const { // Untested
-
-    Node* iterator = this->head_;
+void Hand::DisplayHand() const {
 
     cout << "Current Hand Total: " << hand_totals[0];
-
+    
     if (hand_totals[1] != 0) {
 
         cout << " OR " << hand_totals[1];
     } 
-
     cout << endl;
 
-    for (int i = 0; i < this->size(); i++) {
-
-        cout << *(iterator->card) << " ";
-
-        if (i == 5) {
-
-            cout << endl;
-        }
-    }
+    this->hand_.DisplayQueue();
 
     cout << endl;
 }
 
 // Operator Overloads
-Hand& Hand::operator = (const Hand& rval) { // Untested
+Hand& Hand::operator = (const Hand& rval) {
 
     if (this == &rval) { // Same extact list
 
         return *this;
     } 
-    
-    this->~Hand();
 
-    if (rval.size() != 0) {
+    this->hand_ = rval.hand_; // Uses 'Queue' assignment op
 
-        Node* rval_iterator = rval.head_;
-        Node* lval_iterator = new Node();
-        lval_iterator->card = new Card(*rval_iterator->card);
+    this->hand_totals[0] = rval.hand_totals[0]; // TODO: Next 6 lines get ran twice if = called from C.C.
 
-        rval_iterator = rval_iterator->next;
+    this->hand_totals[1] = rval.hand_totals[1];
 
-        this->head_ = lval_iterator;
+    this->count_ = rval.count();
 
-        while (rval_iterator != nullptr) {
-            
-            Node* temp = lval_iterator;
-
-            lval_iterator->next = new Node();
-            lval_iterator->next->card = new Card(*rval_iterator->card);
-
-            lval_iterator = lval_iterator->next;
-            lval_iterator->prev = temp;
-
-            rval_iterator = rval_iterator;
-        }
-
-        this->tail_ = lval_iterator;
-    }
+    this->ace_counter_ = rval.ace_counter_;
 
     return *this;
+}
+
+bool Hand::operator == (const Hand& rval) const {
+
+    if (this == &rval) {
+
+        return true;
+    } else if (this->hand_ != rval.hand_ || (this->hand_totals[0] != rval.hand_totals[0] || 
+                                             this->hand_totals[1] != rval.hand_totals[1])) {
+
+        return false;
+    } 
+
+    return true;
+}
+
+bool Hand::operator != (const Hand& rval) const {
+
+    return (*this == rval) ? true : false;
 }
 
 // Private Member Functions
@@ -122,49 +154,52 @@ Hand& Hand::operator = (const Hand& rval) { // Untested
 // O(n) vs O(1)
 void Hand::UpdateHandTotal() { // Untested
 
-    if (this->head_ == nullptr) {
+    if (this->count() == 0) {
 
-        cerr << "Error: Hand::UpdateHandTotal() - this->head_ == nullptr" << '\n';
-        return; // Exception???
+        cerr << "Hand::UpdateHandTotal() | Cannot update hand total w/ a Empty hand" << '\n';
+        
+        return; // Exception
     } 
     
-    switch (this->head_->card->value()) {
+    Card* ptr = new Card();
 
-        case 1:
+    if (this->count() == 1) {
 
-        if (hand_totals[0] + 11 <= 21) {
+        this->hand_.front(*ptr);
+    } else {
+
+        this->hand_.back(*ptr);
+    }
+
+    if (ptr->value() == 1) {
+
+        if (hand_totals[0] + 11 <= 21 && hand_totals[1] + 11 <= 21) { // Investigate
 
             hand_totals[1] = hand_totals[0] + 11;
-        }
+        } 
 
         hand_totals[0] += 1;
-        break;
+    } else {
 
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-        case 9: 
+        if (ptr->value() >= 10 && ptr->value() <= 13) {
 
-        hand_totals[0] += this->head_->card->value();
-        hand_totals[1] += this->head_->card->value();
-        break;
+            hand_totals[0] += 10;
+        } else {
 
-        case 10:
-        case 11:
-        case 12:
-        case 13:
+            hand_totals[0] += ptr->value();
+        }
 
-        hand_totals[0] += 10;
-        hand_totals[1] += 10;
-        break;
+        if (this->ace_counter() > 0 && ptr->value() + this->hand_totals[1] <= 21) { // MAKE CARDS VALUE REPRESENT IT'S ACTUAL VALUE
 
-        default:
-        cerr << "Error: Hand::UpdateHandTotal | Invalid 'this->head_->card_value()' " << endl;
-        break;
+            this->hand_totals[1] += ptr->value();
+        } else if (this->hand_totals[1] != 0) {
+
+            this->hand_totals[1] = 0;
+        }
     }
+
+    delete ptr;
+    
+    // TODO: If somehow ptr->value() is greater than 13 or less than 1
 }
 

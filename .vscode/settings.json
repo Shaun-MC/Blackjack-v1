@@ -3,6 +3,7 @@
         "iostream": "cpp",
         "exception": "cpp",
         "vector": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "ostream": "cpp"
     }
 }

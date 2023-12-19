@@ -1,18 +1,12 @@
 #include "Card.h"
 
 // Constructors
-Card::Card() {
-
-    this->suit_ = 0;
-    this->value_ = 0;
+Card::Card() : suit_(0), value_(0) {
 
     this->suit_character_ = "";
 }
 
-Card::Card(const int suit, const int value) {
-
-    this->suit_ = suit;
-    this->value_ = value;
+Card::Card(const int suit, const int value) : suit_(suit), value_(value) {
 
     switch(suit) {
 
@@ -101,6 +95,7 @@ ostream& operator << (ostream& ostrm, const Card& output) {
         case 9:
         case 10: 
         cout << output.value();
+        break;
 
         case 11: 
         cout << "J";

@@ -14,6 +14,9 @@ class Queue {
   Queue(const Queue& rval);
   
   // Getters - Setters
+  bool front(Card& return_element) const;
+  bool back(Card& return_element) const;
+
   int front_index() const;
   int back_index() const;
 
@@ -24,6 +27,8 @@ class Queue {
   void Push(const Card& element);
 
   bool IsEmpty() const;
+
+  void DisplayQueue() const;
 
   // Operator Overloads
   Queue& operator = (const Queue& rval);

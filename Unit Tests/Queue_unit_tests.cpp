@@ -8,6 +8,9 @@ using namespace std;
 const Card card1(1,1); // Ace of Hearts
 const Card card2(2,1); // Ace of Diamonds
 
+// TODO: Add Tests For front() & back()
+// TODO: Add Tests For DisplayQueue()
+
 bool CopyConstructorTest1() {
 
     Queue hand1;

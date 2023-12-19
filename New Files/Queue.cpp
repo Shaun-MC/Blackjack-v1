@@ -23,26 +23,55 @@ Queue::Queue(const Queue& rval) {
 }
 
 // Getters
-int Queue::front_index() const { // Untested
+bool Queue::front(Card& return_element) const { // TODO: Use exceptions instead of boolean - make const
 
     if (IsEmpty()) {
 
         cerr << "Queue::front() | Queue is Empty" << endl;
 
-        return -1; // USE Exceptions
+        return false; // Exception
+    } else {
+
+        return_element = this->vec_[this->front_index_];
+        
+        return true;
+    }
+}
+
+bool Queue::back(Card& return_element) const { // TODO: use exceptions instead of boolean - make const
+
+    if (IsEmpty()) {
+
+        cerr << "Queue::back() | Queue is Empty" << endl;
+
+        return false; // Exception
+    } else {
+
+        return_element = this->vec_[this->back_index_];
+
+        return true;
+    }
+}
+int Queue::front_index() const { // TODO: use exceptions instead of garbage
+
+    if (IsEmpty()) {
+
+        cerr << "Queue::front_index() | Queue is Empty" << endl;
+
+        return -1; // Exception
     } else {
 
         return this->front_index_;
     }
 }
 
-int Queue::back_index() const { // Untested
+int Queue::back_index() const { // TODO: use exceptions instead of garbage
 
     if (IsEmpty()) {
 
-        cerr << "Queue::back() | Queue is Empty" << endl;
+        cerr << "Queue::back_index() | Queue is Empty" << endl;
         
-        return -1; // USE EXCEPTIONS
+        return -1; // EXCEPTION
     } else {
 
         return this->back_index_;
@@ -107,6 +136,18 @@ bool Queue::IsEmpty() const {
     return (this->length_ == 0) ? true : false;
 }
 
+void Queue::DisplayQueue() const {
+
+    for (int i = 0; i < this->length(); i++) {
+
+        cout << this->vec_[(this->front_index() + i) % this->vec_.size()] << " ";
+
+        if (i != 0 && i % 5 == 0) {
+
+            cout << endl;
+        }
+    }
+}
 // Operator Overloads 
 
 // Worst Case: O(??)
