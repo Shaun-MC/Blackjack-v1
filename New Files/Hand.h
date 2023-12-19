@@ -3,7 +3,7 @@
 
 #include "Card.h"
 
-#include <queue>
+#include <Queue.h>
 
 // Make it a Queue
 
@@ -21,10 +21,10 @@ class Hand {
 
   // Actions
 
-    // Duplicates Allowed - First in Last Out
+    // Duplicates Allowed 
   void AddCardToHand(const int suit, const int value);
 
-    // First in Last Out - Takes the 'head_' card out of the hand
+    // 
   void RemoveCardFromHand(); 
 
   void DisplayHand() const;
@@ -36,16 +36,8 @@ class Hand {
 
   // Private Member Functions
   void UpdateHandTotal();
-  
-  struct Node {
 
-    Card* card;
-    Node* next = nullptr; 
-    Node* prev = nullptr;
-  };
-
-  Node* head_; 
-  Node* tail_;
+  Queue hand_;
 
   int hand_totals[2];
 

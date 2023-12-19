@@ -3,9 +3,6 @@
 // Constructors
 Hand::Hand() { // Untested
 
-    this->head_ = nullptr;
-    this->tail_ = nullptr;
-
     this->hand_totals[0] = this->hand_totals[1] = 0;
 
     this->size_ = 0;
@@ -15,10 +12,6 @@ Hand::Hand() { // Untested
 
 Hand::Hand(const Hand& rval) { // Untested
 
-    *this = rval;
-
-    this->size_ = rval.size();
-    this->ace_counter_ = rval.ace_counter_;
 }
 
 Hand::~Hand() { // Untested
@@ -27,9 +20,6 @@ Hand::~Hand() { // Untested
 
         this->RemoveCardFromHand();
     }
-
-    this->head_ = nullptr;
-    this->tail_ = nullptr;
 }
 
 // Getter
@@ -41,24 +31,8 @@ int Hand::size() const { // Untested
 // Actions
 void Hand::AddCardToHand(const int suit, const int value) { // Untested
 
-    Node* insert_node = new Node();             // Deleted in Destructor
-    insert_node->card = new Card(suit, value);  // Deleted in Destructor
-
-    if (this->head_ == nullptr) {
-
-        this->head_ = insert_node;
-        this->tail_ = insert_node;
-
-        ++this->size_;
-    } else {
-
-        Node* temp = this->head_;
-
-        this->head_ = insert_node;
-
-        insert_node->prev = temp;
-        temp->next = insert_node;
-    }
+    Card* insert_card = new Card
+    this->hand_->Pop()
 
     if (value == 1) {
 

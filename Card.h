@@ -22,8 +22,10 @@ class Card {
   void set_value(int value);
   
   // Operator Overloads
-  bool operator == (const Card& rval);
-  bool operator != (const Card& rval);
+  void operator = (const Card& rval);
+
+  bool operator == (const Card& rval) const;
+  bool operator != (const Card& rval) const;
 
   friend ostream& operator << (ostream& ostrm, const Card& output);
 

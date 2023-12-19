@@ -64,12 +64,19 @@ void Card::set_value(const int value) {
 }
 
 // Operator Overloads
-bool Card::operator == (const Card& rval) {
+void Card::operator = (const Card& rval) {
+
+    this->suit_ = rval.suit();
+    this->value_ = rval.value();
+
+    this->suit_character_ = rval.suit_character();
+}
+bool Card::operator == (const Card& rval) const {
 
     return (this->suit() == rval.suit() && this->value() == rval.value()) ? true : false;
 }
 
-bool Card::operator != (const Card& rval) {
+bool Card::operator != (const Card& rval) const {
 
     return (*this == rval) ? false : true;
 }
@@ -111,5 +118,7 @@ ostream& operator << (ostream& ostrm, const Card& output) {
         cout << "Erorr: Card::operator << | Invalid output.value() digit [1,14]";
         break;
     }
+
+    return ostrm;
 }
 
