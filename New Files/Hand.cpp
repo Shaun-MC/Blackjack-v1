@@ -1,5 +1,8 @@
 #include "Hand.h"
 
+// TODO: implement exceptions where appropreiate
+// TODO: Code Reuse in operator =
+
 // Constructors
 Hand::Hand() : count_(0), ace_counter_(0) {
 
@@ -50,7 +53,7 @@ void Hand::AddCardToHand(const Card& insert_card) {
     UpdateHandTotal();
 }
 
-void Hand::RemoveCardFromHand() { // Aces - Wrong
+void Hand::RemoveCardFromHand() { // Aces - Wrong -- AHAHAHAAHAHAHH
     
     Card* temp = new Card();
 
@@ -60,9 +63,12 @@ void Hand::RemoveCardFromHand() { // Aces - Wrong
 
     if (temp->value() == 1) { // Ace
 
-        if (this->ace_counter() < 2) {
+        if (this->ace_counter() == 1) {
 
-            hand_totals[1] -= 11;
+            hand_totals[1] = 0;
+        } else if (this->ace_counter() >= 2){
+
+            hand_totals[1] -= 1;
         }
         
         hand_totals[0] -= 1;
@@ -119,7 +125,7 @@ Hand& Hand::operator = (const Hand& rval) {
 
     this->hand_ = rval.hand_; // Uses 'Queue' assignment op
 
-    this->hand_totals[0] = rval.hand_totals[0]; // TODO: Next 6 lines get ran twice if = called from C.C.
+    this->hand_totals[0] = rval.hand_totals[0]; // Next 6 lines get ran twice if = called from C.C.
 
     this->hand_totals[1] = rval.hand_totals[1];
 
@@ -152,7 +158,7 @@ bool Hand::operator != (const Hand& rval) const {
 // Private Member Functions
 
 // O(n) vs O(1)
-void Hand::UpdateHandTotal() { // Untested
+void Hand::UpdateHandTotal() { 
 
     if (this->count() == 0) {
 
@@ -171,25 +177,28 @@ void Hand::UpdateHandTotal() { // Untested
         this->hand_.back(*ptr);
     }
 
+    // A + A = 2 & 12
+    // A + 10 = 11 & 21
+    // 10 + 2 + A = 13 & 0
+    // A + 10 + 2 = 13 & 0
+
     if (ptr->value() == 1) {
 
-        if (hand_totals[0] + 11 <= 21 && hand_totals[1] + 11 <= 21) { // Investigate
+        if (hand_totals[0] + 11 <= 21 && hand_totals[1] + 11 <= 21) {
 
-            hand_totals[1] = hand_totals[0] + 11;
+            hand_totals[1] += hand_totals[0] + 11;
+        } else if (hand_totals[1] + 11 > 21) {
+
+            hand_totals[1] += 1;
         } 
 
         hand_totals[0] += 1;
+
     } else {
 
-        if (ptr->value() >= 10 && ptr->value() <= 13) {
+        this->hand_totals[0] += ptr->value();
 
-            hand_totals[0] += 10;
-        } else {
-
-            hand_totals[0] += ptr->value();
-        }
-
-        if (this->ace_counter() > 0 && ptr->value() + this->hand_totals[1] <= 21) { // MAKE CARDS VALUE REPRESENT IT'S ACTUAL VALUE
+        if (this->ace_counter() > 0 && ptr->value() + this->hand_totals[1] <= 21) {
 
             this->hand_totals[1] += ptr->value();
         } else if (this->hand_totals[1] != 0) {
@@ -199,7 +208,5 @@ void Hand::UpdateHandTotal() { // Untested
     }
 
     delete ptr;
-    
-    // TODO: If somehow ptr->value() is greater than 13 or less than 1
 }
 

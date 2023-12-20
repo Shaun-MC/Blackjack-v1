@@ -8,8 +8,6 @@ using namespace std;
 
 // TODO: Make DisplayTests 'testable' - stringstreams?
 
-// TODO: UpdateHandTotal 4 & RemoveCardFromHand 1 FAIL
-
 const Card card1(1, 7);  // 7 of Hearts
 const Card card2(2, 10); // 10 of Diamonds
 const Card card3(3, 1);  // Ace of Clubs
@@ -220,7 +218,7 @@ bool UpdateHandTotalTest2() { // Newest card is an Ace - doesn't bust hand_total
     return true;
 }
 
-bool UpdateHandTotalTest3() { // Newest card is an Ace - busts hand_totals[1]
+bool UpdateHandTotalTest3() { // Newest card is an Ace - hand_totals[1] is irrelevant
 
     Hand hand25;
     

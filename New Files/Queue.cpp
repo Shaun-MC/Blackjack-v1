@@ -161,6 +161,7 @@ Queue& Queue::operator = (const Queue& rval) {
     } 
 
     while(this->Pop());
+
     this->front_index_ = 0;
     this->back_index_ = 1;
 
@@ -171,7 +172,7 @@ Queue& Queue::operator = (const Queue& rval) {
         int rval_iterator = rval.front_index_;
 
         // Copy over elements until the queue wraps around (if it does)
-        while (rval_iterator < rval.vec_.size() && rval_iterator <= rval.back_index_) { // Something wrong here
+        while (rval_iterator < rval.vec_.size() && rval_iterator <= rval.back_index_) {
 
             this->Push(rval.vec_.at(rval_iterator));
 
