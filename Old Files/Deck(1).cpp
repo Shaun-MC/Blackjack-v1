@@ -1,4 +1,4 @@
-#include "Deck.h"
+#include "Deck(1).h"
 
 #include <iomanip>
 #include <random>
@@ -179,19 +179,19 @@ void Deck::getCard(int* handPointer) { //TODO see if there's a way to get rid of
 
             if (randomTag == lesserBound || randomTag == greaterBound || randomTag == middleBound){
             
-            while (iterator->cardTag != randomTag) {    // linear search - figure out better way to do this
+                while (iterator->cardTag != randomTag) {    // linear search - figure out better way to do this
+                    
+                    iterator = iterator->next;
+                }
                 
-                iterator = iterator->next;
-            }
-            
-            handPointer[0] = iterator->cardSuit;
-            handPointer[1] = iterator->cardValue;
-            
-            removeCard(randomTag);
+                handPointer[0] = iterator->cardSuit;
+                handPointer[1] = iterator->cardValue;
+                
+                removeCard(randomTag);
 
-            return;
-            
-            flag = false;
+                return;
+                
+                flag = false;
             }
 
             else if (middleBound < randomTag) {

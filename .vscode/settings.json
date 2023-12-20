@@ -4,6 +4,7 @@
         "exception": "cpp",
         "vector": "cpp",
         "iomanip": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "new": "cpp"
     }
 }
