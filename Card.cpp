@@ -1,12 +1,15 @@
 #include "Card.h"
 
+// TODO: Add Exceptions where appropreiate
+
 // Constructors
 Card::Card() : suit_(0), value_(0) {
 
     this->suit_character_ = "";
+    this->card_character_ = "";
 }
 
-Card::Card(const int suit, const int value) : suit_(suit), value_(value) {
+Card::Card(const int suit, const int value) : suit_(suit) {
 
     switch(suit) {
 
@@ -27,7 +30,38 @@ Card::Card(const int suit, const int value) : suit_(suit), value_(value) {
         break;
         
         default:
-        cerr << "ERROR: Card(int, int): INVALID SUIT ERROR" << endl;
+        cerr << "Card::Card(suit, value) | Invalid suit digit [1,4]" << endl; // Exception
+    }
+
+    if (value == 1) {
+
+        this->card_character_ = "A";
+        this->value_ = value;
+
+    } else if (value >= 11) {
+
+        switch(value) {
+            case 11:
+            this->card_character_ = "J";
+            break;
+
+            case 12:
+            this->card_character_ = "Q";
+            break;
+
+            case 13:
+            this->card_character_ = "K";
+            break;
+
+            default:
+            cerr << "Card::Card(suit, value) | Invalid value digit [1, 13]" << endl; // Better Error Checking - Exception at the top of the function
+        }
+
+        this->value_ = 10;
+    } else {
+
+        this->card_character_ = to_string(value);
+        this->value_ = value;
     }
 }
 
@@ -47,6 +81,11 @@ string Card::suit_character() const {
     return this->suit_character_;
 }
 
+string Card::card_character() const {
+
+    return this->card_character_;
+}
+
 void Card::set_suit(const int suit) {
 
     this->suit_ = suit;
@@ -58,16 +97,10 @@ void Card::set_value(const int value) {
 }
 
 // Operator Overloads
-void Card::operator = (const Card& rval) {
-
-    this->suit_ = rval.suit();
-    this->value_ = rval.value();
-
-    this->suit_character_ = rval.suit_character();
-}
 bool Card::operator == (const Card& rval) const {
 
-    return (this->suit() == rval.suit() && this->value() == rval.value()) ? true : false;
+    return (this->suit() == rval.suit() && this->value() == rval.value() && 
+            this->card_character() == rval.card_character()) ? true : false;
 }
 
 bool Card::operator != (const Card& rval) const {
@@ -77,42 +110,8 @@ bool Card::operator != (const Card& rval) const {
 
 ostream& operator << (ostream& ostrm, const Card& output) {
 
-    cout << output.suit_character();
-
-    switch(output.value()) {
-
-        case 1: 
-        cout << "A";
-        break;
-
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-        case 9:
-        case 10: 
-        cout << output.value();
-        break;
-
-        case 11: 
-        cout << "J";
-        break;
-
-        case 12:
-        cout << "Q";
-        break;
-
-        case 13:
-        cout << "K";
-        break;
-
-        default:
-        cout << "Erorr: Card::operator << | Invalid output.value() digit [1,14]";
-        break;
-    }
+    ostrm << output.suit_character();
+    ostrm << output.card_character();
 
     return ostrm;
 }
