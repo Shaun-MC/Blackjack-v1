@@ -6,24 +6,29 @@
 class Dealer{
  public:
   // Constructors
+  Dealer(); // nessecary??
+  Dealer(const Card& first_card, const Card& second_card);
 
   // Getters - Setters
 
   // Actions
+  void ReceiveCard(const Card& new_card);
+
+  //bool PlayHand();
+
   void DisplayHand() const;
-
-  bool NaturalsCheck() const;
-  bool BustCheck() const;
-
-  void Hit() const;
 
   // Operator Overloads
 
  private:
   // Private Member Functions
-   void UpdateHandTotal();
+  bool NaturalsCheck() const;
+  bool BustCheck() const;
 
- Hand hand;
+  bool Hit() const;
+  bool Stand() const;
+
+  Hand hand_;
 
 };
 
