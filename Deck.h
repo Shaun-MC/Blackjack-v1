@@ -13,19 +13,24 @@ class Deck {
   
   // Constructors - Destructors
   Deck();
+
+    // Exists only to test AddCard() & RemoveCard() w/ 1 Node 
+  Deck(int skip_initializing);
+
   ~Deck();
   
   // Getters - Setters
   int length() const; // purely for testing correctness of other functions
 
   // Actions
-  bool InitializeDeck(int suit, int value, int tag); // Recursive Function called in Constructor
 
-  bool AddCard(int tag);
+    // Only implemented to test RemoveCard(), not currently used in any other context
+    // No 'sorted' error checking, always adding to the back
+  bool AddCard(const Card& card);
 
-  bool RemoveCard(int tag);
+  bool RemoveCard(const Card& remove_card);
 
-  void RetrieveCard(int tag, Card* &ret_card);
+  void RetrieveCard(Card* &ret_card, int test_tag);
 
   void DisplayDeck() const;
 
@@ -33,6 +38,7 @@ class Deck {
 
  private: 
   // Private Member Functions
+  bool InitializeDeck(int suit, int value, int tag); // Recursive Function called in Constructor
   void SetDeck(int suit, int value, int tag);
 
   int CreateRandomTag() const;
@@ -42,11 +48,12 @@ class Deck {
   
   struct Node {
 
-    Card* card;
+    Card* card = nullptr;
 
-    int tag = 0;
     Node* next = nullptr;
     Node* prev = nullptr;
+
+    int tag = 0;
    };
 
    Node* head_;

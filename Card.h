@@ -18,6 +18,7 @@ class Card {
   int value() const;
   string suit_character() const;
   string card_character() const;
+  int face_value() const;
 
   void set_suit(const int suit);
   void set_value(int value);
@@ -36,6 +37,8 @@ class Card {
   string suit_character_;
 
   string card_character_;
+
+  int face_value_;
 };
 
 #endif

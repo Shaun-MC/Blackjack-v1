@@ -3,7 +3,7 @@
 // TODO: Add Exceptions where appropreiate
 
 // Constructors
-Card::Card() : suit_(0), value_(0) {
+Card::Card() : suit_(0), value_(0), face_value_(0) {
 
     this->suit_character_ = "";
     this->card_character_ = "";
@@ -37,20 +37,24 @@ Card::Card(const int suit, const int value) : suit_(suit) {
 
         this->card_character_ = "A";
         this->value_ = value;
+        this->face_value_ = value;
 
     } else if (value >= 11) {
 
         switch(value) {
             case 11:
             this->card_character_ = "J";
+            this->face_value_ = 11;
             break;
 
             case 12:
             this->card_character_ = "Q";
+            this->face_value_ = 12;
             break;
 
             case 13:
             this->card_character_ = "K";
+            this->face_value_ = 13;
             break;
 
             default:
@@ -84,6 +88,11 @@ string Card::suit_character() const {
 string Card::card_character() const {
 
     return this->card_character_;
+}
+
+int Card::face_value() const {
+
+    return this->face_value_;
 }
 
 void Card::set_suit(const int suit) {

@@ -1,4 +1,4 @@
-#include <Deck.h>
+#include "Deck.h"
 
 // TODO: Implement exceptions where appropreiate
 
@@ -10,7 +10,14 @@ Deck::Deck() : length_(0) {
     this->InitializeDeck(0, 0, 0);
 }
 
-Deck::~Deck() { // UNTESTED
+Deck::Deck(int skip_initializing) {
+
+    this->head_ = this->tail_ = this->iterator_ = nullptr;
+
+    this->length_ = 0;
+}
+
+Deck::~Deck() {
 
     Node* delete_node = this->head_;
 
@@ -27,12 +34,21 @@ Deck::~Deck() { // UNTESTED
 
         delete_node = this->iterator_;
     }
+
+    this->head_ = nullptr;
+    this->tail_ = nullptr;
+}
+
+// Getter 
+int Deck::length() const {
+
+    return this->length_;
 }
 
 // Actions
-bool Deck::InitializeDeck(int suit, int value, int tag) { // UNTESTED
+bool Deck::InitializeDeck(int suit, int value, int tag) {
 
-    if (tag == kDeckSize + 1) {
+    if (tag == kDeckSize) {
 
         return false;
     } 
@@ -55,21 +71,38 @@ bool Deck::InitializeDeck(int suit, int value, int tag) { // UNTESTED
     }
 }
 
-bool Deck::RemoveCard(const int tag) { // UNTESTED
+bool Deck::AddCard(const Card& card) {
 
-    if (tag <= 0 || tag > 52) {
+    Node* insert_node = new Node();
+    insert_node->card = new Card(card);
+    insert_node->tag = (card.suit() > 1) ? (13 * (card.suit() - 1)) + card.face_value() : card.value();
 
-        cerr << "Deck::RemoveCard() | Invalid tag value, [1,51]" << endl; // Exception??
-        return false;
+    if (this->head_ == nullptr) { // O Nodes, Adding at the Front
+
+        this->head_ = this->tail_ = insert_node;
+
+    } else { // Multiple nodes, adding at the Back
+
+        this->tail_->next = insert_node;
+        insert_node->prev = this->tail_;
+
+        this->tail_ = insert_node;
     }
+
+    ++this->length_;
+    
+    return true;
+}
+
+bool Deck::RemoveCard(const Card& remove_card) { // UNTESTED
 
     if (this->head_ == nullptr) { // 0 Nodes
 
-        cerr << "Deck::RemoveCard() | Attempting To Remove From an Empty List" << endl; // ^^ ??
+        cerr << "Deck::RemoveCard() | Attempting To Remove From an Empty List" << endl; // Exception ??
         return false;
     }
 
-    if (this->head_ == this->tail_){ // 1 Node
+    if (this->head_ == this->tail_ && *(this->head_->card) == remove_card){ // 1 Node
 
         Node* delete_node = this->head_;
 
@@ -82,7 +115,7 @@ bool Deck::RemoveCard(const int tag) { // UNTESTED
         return true;
     } 
 
-    if (tag == this->head_->tag) { // Removal At Head
+    if (*this->head_->card == remove_card) { // Removal At Head
 
         Node* delete_node = this->head_;
 
@@ -97,11 +130,11 @@ bool Deck::RemoveCard(const int tag) { // UNTESTED
         return true;
     }
 
-    if (tag == this->tail_->tag) { // Removal at Tail
+    if (*this->tail_->card == remove_card) { // Removal at Tail
 
         Node* delete_node = this->tail_;
 
-        this->tail_ = this->tail_->next;
+        this->tail_ = this->tail_->prev;
 
         delete delete_node;
 
@@ -116,9 +149,9 @@ bool Deck::RemoveCard(const int tag) { // UNTESTED
 
     this->iterator_ = this->iterator_->next;
 
-    while (this->iterator_ != this->tail_) {
+    while (this->iterator_ != this->tail_) { // If remove_card tag < head_ || remove_card tag > tail || is greater than iterator at any point
 
-        if (tag == this->iterator_->tag) {  // Removal somewhere in the middle
+        if (*this->iterator_->card == remove_card) {  // Removal somewhere in the middle
 
             Node* delete_node = this->iterator_;
 
@@ -141,10 +174,18 @@ bool Deck::RemoveCard(const int tag) { // UNTESTED
     return false; // Node not found in the list
 }
 
-void Deck::RetrieveCard(int tag, Card* &ret_card) { // Untested - O nodes, 1 nodes ...
+void Deck::RetrieveCard(Card* &ret_card, const int test_tag) { // Untested - O nodes, 1 nodes ...
 
     // So a random card can be retrieved from the list - simulating a shoe of cards
-    int random_tag = CreateRandomTag();
+    int random_tag = 0; // REORGANIZE AFTER 1ST IS COMPLETE TESTING 
+    
+    if (test_tag == 1) {
+
+        random_tag = this->tag_list_[0];
+    } else {
+
+        random_tag = CreateRandomTag();
+    }
 
     // If a card w/ that random_tag has already been dealt - get another random_tag
     while (CheckUsedCardTags(random_tag)) {
@@ -164,13 +205,13 @@ void Deck::RetrieveCard(int tag, Card* &ret_card) { // Untested - O nodes, 1 nod
     // Move iterator into position
     if (this->iterator_ == this->head_) { // Consider: 1 Node long list
 
-        while (this->iterator_->tag != tag) {
+        while (this->iterator_->tag != random_tag) {
 
             this->iterator_ = this->iterator_->next;
         }
     } else {
 
-        while (this->iterator_->tag != tag) {
+        while (this->iterator_->tag != random_tag) {
 
             this->iterator_ = this->iterator_->prev;
         }
@@ -205,22 +246,26 @@ void Deck::DisplayDeck() const { // Untested
 
         cout << *this->iterator_->card << " ";
 
-        if (this->iterator_->next != nullptr && (this->iterator_->card->suit() != this->iterator_->card->suit())) {
+        if (this->iterator_->next != nullptr && (this->iterator_->card->suit() != this->iterator_->next->card->suit())) {
 
             cout << endl;
         }
+
+        this->iterator_ = this->iterator_->next;
     }
+
+    cout << endl;
 }
 
 // Private Member Functions
-void Deck::SetDeck(int suit, int value, int tag) { // Untested
+void Deck::SetDeck(int suit, int value, int tag) {
 
     Node* insert_node = new Node();             // Deleted in Destructor OR RemoveCard()
     insert_node->card = new Card(suit, value);  // Deleted in Destructor OR RemoveCard()
 
     insert_node->tag = tag;
 
-    if (this->head_ = nullptr) { // 0 Nodes / Empty List
+    if (this->head_ == nullptr) { // 0 Nodes / Empty List
 
         this->head_ = this->tail_ = insert_node;
 
@@ -236,7 +281,7 @@ void Deck::SetDeck(int suit, int value, int tag) { // Untested
     }
 }
 
-int Deck::CreateRandomTag() const { // Untested
+int Deck::CreateRandomTag() const {
 
     random_device rd;
     mt19937 mt(rd());                                   
@@ -247,13 +292,20 @@ int Deck::CreateRandomTag() const { // Untested
 
 bool Deck::CheckUsedCardTags(const int tag) const { // Untested
 
-    for (int i = 0; i < this->tag_list_.size() - 1; i++) {
+    if (this->tag_list_.size() == 0) {
+
+        return true;
+    }
+
+    for (int i = 0; i < this->tag_list_.size(); i++) {
 
         if (this->tag_list_[i] == tag) {
 
             return true;
         }
     }
+
+    return false;
 }
 void Deck::ResetIterator() const {
 
@@ -262,7 +314,14 @@ void Deck::ResetIterator() const {
 
 bool Deck::TestConnections() const { // Untested
 
-    while (this->iterator_ != nullptr) {
+    this->ResetIterator();
+
+    if (this->iterator_ == nullptr) {
+
+        cerr << "Deck::TestConnections() | Cannot call function w/ an empty list" << endl; // Exception
+    }
+
+    while (this->iterator_->next != nullptr) {
 
         if (this->iterator_->next->prev != this->iterator_) {
 
