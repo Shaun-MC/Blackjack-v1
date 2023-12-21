@@ -14,8 +14,8 @@ class Queue {
   Queue(const Queue& rval);
   
   // Getters - Setters
-  bool front(Card& return_element) const;
-  bool back(Card& return_element) const;
+  const Card& front() const;
+  const Card& back() const;
 
   int front_index() const;
   int back_index() const;

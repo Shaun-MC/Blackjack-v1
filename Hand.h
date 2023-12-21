@@ -17,9 +17,11 @@ class Hand {
   int count() const;
   int ace_counter() const;
 
-   // Only used for UpdateHandTotal correctness
   int hand_totals0() const;
   int hand_totals1() const;
+
+  const Card& front_card() const;
+  const Card& back_card() const;
 
   // Actions
 

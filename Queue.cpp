@@ -23,33 +23,30 @@ Queue::Queue(const Queue& rval) {
 }
 
 // Getters
-bool Queue::front(Card& return_element) const { // TODO: Use exceptions instead of boolean - make const
+const Card& Queue::front() const { // TODO: Use exceptions instead of boolean - make const
 
     if (IsEmpty()) {
 
         cerr << "Queue::front() | Queue is Empty" << endl;
 
-        return false; // Exception
+        return this->vec_[this->front_index_]; // Exception
     } else {
 
-        return_element = this->vec_[this->front_index_];
-        
-        return true;
+        return this->vec_[this->front_index_];
     }
 }
 
-bool Queue::back(Card& return_element) const { // TODO: use exceptions instead of boolean - make const
+const Card& Queue::back() const { // TODO: use exceptions instead of boolean - make const
+
 
     if (IsEmpty()) {
 
         cerr << "Queue::back() | Queue is Empty" << endl;
 
-        return false; // Exception
+        return this->vec_[this->front_index_]; // Exception
     } else {
-
-        return_element = this->vec_[this->back_index_];
-
-        return true;
+        
+        return (this->length() == 1) ? this->vec_[this->front_index_] : this->vec_[this->back_index_];
     }
 }
 int Queue::front_index() const { // TODO: use exceptions instead of garbage

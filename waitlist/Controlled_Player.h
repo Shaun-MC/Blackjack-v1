@@ -5,22 +5,20 @@
 #include "Statistics_Manager.h"
 
 #include <vector>
+#include <string>
 
 class Controlled_Player {
  public:
 
   // Constructors - Destructor ??
+  Controlled_Player();
 
   // Getters - Setters ?? 
 
   // Actions
-  int GameOptionsCheck() const;
+  int GameOptionsCheck(const int hand_index) const;
 
-  bool BustCheck() const;
-  bool SplitCheck() const;
-  bool DoubleDownCheck() const;
-  bool HitStandCheck() const;
-  bool NaturalsCheck() const;
+  bool BustCheck(const int hand_index) const;
 
   void DisplayHands() const;
 
@@ -29,7 +27,14 @@ class Controlled_Player {
  private:
   
   // Private Member Functions
+  bool NaturalsCheck(const int hand_index) const;
+  bool SplitCheck(const int hand_index) const;
+  
+  bool HitStandCheck(const int hand_index) const;
+
   void AddAHand(const Card& split_card);
+  
+  bool SplitDesired() const;
 
   vector<Hand> hands_;
 

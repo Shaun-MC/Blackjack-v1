@@ -38,6 +38,15 @@ int Hand::hand_totals1() const {
     return this->hand_totals[1];
 }
 
+const Card& Hand::front_card() const {
+
+    return this->hand_.front();
+}
+
+const Card& Hand::back_card() const {
+
+    return this->hand_.front();
+}
 // Actions
 void Hand::AddCardToHand(const Card& insert_card) {
 
@@ -53,11 +62,9 @@ void Hand::AddCardToHand(const Card& insert_card) {
     UpdateHandTotal();
 }
 
-void Hand::RemoveCardFromHand() { // Aces - Wrong -- AHAHAHAAHAHAHH
+void Hand::RemoveCardFromHand() { // Aces
     
-    Card* temp = new Card();
-
-    this->hand_.front(*temp); // Retrieve the eventually Pop'ed Card
+    const Card* temp = &this->hand_.front(); // Retrieve the eventually Pop'ed Card
 
     bool ace_flag = (this->hand_totals[1] == 0) ? false : true;  // No Ace : Ace
 
@@ -96,8 +103,6 @@ void Hand::RemoveCardFromHand() { // Aces - Wrong -- AHAHAHAAHAHAHH
     this->hand_.Pop();
     
     --this->count_;
-
-    delete temp;
 }
 
 void Hand::DisplayHand() const {
@@ -167,22 +172,16 @@ void Hand::UpdateHandTotal() {
         return; // Exception
     } 
     
-    Card* ptr = new Card();
+    Card temp;
 
-    if (this->count() == 1) {
-
-        this->hand_.front(*ptr);
-    } else {
-
-        this->hand_.back(*ptr);
-    }
+    temp = (this->count() == 1) ? this->hand_.front() : this->hand_.back();
 
     // A + A = 2 & 12
     // A + 10 = 11 & 21
     // 10 + 2 + A = 13 & 0
     // A + 10 + 2 = 13 & 0
 
-    if (ptr->value() == 1) {
+    if (temp.value() == 1) {
 
         if (hand_totals[0] + 11 <= 21 && hand_totals[1] + 11 <= 21) {
 
@@ -196,17 +195,15 @@ void Hand::UpdateHandTotal() {
 
     } else {
 
-        this->hand_totals[0] += ptr->value();
+        this->hand_totals[0] += temp.value();
 
-        if (this->ace_counter() > 0 && ptr->value() + this->hand_totals[1] <= 21) {
+        if (this->ace_counter() > 0 && temp.value() + this->hand_totals[1] <= 21) {
 
-            this->hand_totals[1] += ptr->value();
+            this->hand_totals[1] += temp.value();
         } else if (this->hand_totals[1] != 0) {
 
             this->hand_totals[1] = 0;
         }
     }
-
-    delete ptr;
 }
 

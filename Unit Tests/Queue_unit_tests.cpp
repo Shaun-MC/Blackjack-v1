@@ -5,8 +5,8 @@
 
 using namespace std;
 
-const Card card1(1,1); // Ace of Hearts
-const Card card2(2,1); // Ace of Diamonds
+const Card kCard1(1,1); // Ace of Hearts
+const Card kCard2(2,1); // Ace of Diamonds
 
 // TODO: Add Tests For front() & back()
 // TODO: Add Tests For DisplayQueue()
@@ -15,8 +15,8 @@ bool CopyConstructorTest1() {
 
     Queue hand1;
 
-    hand1.Push(card1);
-    hand1.Push(card2);
+    hand1.Push(kCard1);
+    hand1.Push(kCard2);
 
     Queue hand2(hand1);
 
@@ -32,8 +32,8 @@ bool CopyConstructorTest2() {
 
     Queue hand3;
 
-    hand3.Push(card1);
-    hand3.Push(card2);
+    hand3.Push(kCard1);
+    hand3.Push(kCard2);
 
     Queue hand4 = hand3;
 
@@ -50,11 +50,11 @@ bool AssignmentOpTest1() { // this == &rval
     Queue hand5;
     Queue hand6;
     
-    hand5.Push(card1);
-    hand5.Push(card2);
+    hand5.Push(kCard1);
+    hand5.Push(kCard2);
     
-    hand6.Push(card1);
-    hand6.Push(card2);
+    hand6.Push(kCard1);
+    hand6.Push(kCard2);
 
     hand5 = hand5;
 
@@ -72,8 +72,8 @@ bool AssignmentOpTest2() { // rval is Empty
     Queue hand8;
     Queue hand9;
 
-    hand7.Push(card1);
-    hand7.Push(card2);
+    hand7.Push(kCard1);
+    hand7.Push(kCard2);
 
     hand7 = hand8;
 
@@ -93,13 +93,13 @@ bool AssignmentOpTest3() { // straight transfer
 
     for (int i = 0; i < 5; i++) {
 
-        hand10.Push(card2);
-        hand11.Push(card2);
+        hand10.Push(kCard2);
+        hand11.Push(kCard2);
     }
 
     for (int j = 0; j < 3; j++) {
 
-        hand12.Push(card1);
+        hand12.Push(kCard1);
     }
 
     hand12 = hand10;
@@ -119,7 +119,7 @@ bool AssignmentOpTest4() { // accounting for rval being circular
 
     for (int i = 0; i < 8; i++) {
 
-        hand13.Push(card1);
+        hand13.Push(kCard1);
     }
 
     for (int j = 0; j < 3; j++) {
@@ -129,7 +129,7 @@ bool AssignmentOpTest4() { // accounting for rval being circular
 
     for (int k = 0; k < 4; k++) {
 
-        hand13.Push(card2);
+        hand13.Push(kCard2);
     }
    
     hand14 = hand13;
@@ -140,6 +140,44 @@ bool AssignmentOpTest4() { // accounting for rval being circular
     }
 
     return true;
+}
+
+bool FrontTest() {
+
+    Queue hand;
+    Card temp;
+    bool ret = false;
+
+    hand.Push(kCard1);
+
+    temp = hand.front();
+
+    return (temp == kCard1) ? true : false;
+}
+
+bool BackTest1() { // Queue of length 1
+
+    Queue hand;
+    Card temp;
+
+    hand.Push(kCard1);
+
+    temp = hand.back();
+
+    return (temp == kCard1) ? true : false;
+}
+
+bool BackTest2() { // Queue with a lenght more than 1
+
+    Queue hand;
+    Card temp;
+
+    hand.Push(kCard1);
+    hand.Push(kCard2);
+
+    temp = hand.back();
+
+    return (temp == kCard2) ? true : false;
 }
 
 bool PopTest1() { // Empty Queue
@@ -158,7 +196,7 @@ bool PopTest2() { // Not Empty Queue
 
     Queue hand16;
 
-    hand16.Push(card2);
+    hand16.Push(kCard2);
     hand16.Pop();
 
     if (hand16.length() != 0) {
@@ -173,7 +211,7 @@ bool PushTest1() { // Empty Queue
 
     Queue hand18;
 
-    hand18.Push(card1);
+    hand18.Push(kCard1);
 
     if (hand18.length() != 1) {
 
@@ -187,8 +225,8 @@ bool PushTest2() { // Queue w/ 1 element & Pushing under the vec_ size
 
     Queue hand20;
 
-    hand20.Push(card1);
-    hand20.Push(card2);
+    hand20.Push(kCard1);
+    hand20.Push(kCard2);
 
     if (hand20.length() != 2) {
 
@@ -204,7 +242,7 @@ bool PushTest3() { // Doubling the queue size
 
     for (int i = 0; i < 20; i++) {
 
-        hand22.Push(card1);
+        hand22.Push(kCard1);
     }
 
     if (hand22.length() != 20) {
@@ -235,7 +273,7 @@ bool EqualityTest3() { // Differnt sizes
 
     for (int i = 0; i < 5; i++) {
 
-        hand25.Push(card1);
+        hand25.Push(kCard1);
     }
 
     return (hand25 == hand26) ? false : true;
@@ -245,7 +283,7 @@ bool EqualityTest4() { // Differnt lengths
 
     Queue hand27, hand28;
 
-    hand27.Push(card1);
+    hand27.Push(kCard1);
 
     return (hand27 == hand28) ? false : true;
 }
@@ -256,8 +294,8 @@ bool EqualityTest5() { // Disimilar Queues - no wrap around
 
     for (int i = 0; i < 2; i++) {
 
-        hand29.Push(card1);
-        hand30.Push(card2);
+        hand29.Push(kCard1);
+        hand30.Push(kCard2);
     }
 
     return (hand29 == hand30) ? false : true;
@@ -269,13 +307,13 @@ bool EqualityTest6() {  // Disimilar Queues - wrap around
 
     for (int i = 0; i < 5; i++) {
 
-        hand31.Push(card1);
-        hand32.Push(card1);
+        hand31.Push(kCard1);
+        hand32.Push(kCard1);
     }
 
     hand31.Pop();
 
-    hand31.Push(card2);
+    hand31.Push(kCard2);
 
     return (hand31 == hand32) ? false : true;
 }
@@ -286,8 +324,8 @@ bool EqualityTest7() { // Similar Queues - no wrap around
 
     for (int i = 0; i < 10; i++) {
 
-        hand33.Push(card1);
-        hand34.Push(card1);
+        hand33.Push(kCard1);
+        hand34.Push(kCard1);
     }
 
     return (hand33 == hand34) ? true : false;
@@ -299,15 +337,15 @@ bool EqualityTest8() {  // Similar Queues - wrap around
 
     for (int i = 0; i < 10; i++) {
 
-        hand35.Push(card1);
-        hand36.Push(card1);
+        hand35.Push(kCard1);
+        hand36.Push(kCard1);
     }
 
     hand35.Pop();
     hand36.Pop();
 
-    hand35.Push(card2);
-    hand36.Push(card2);
+    hand35.Push(kCard2);
+    hand36.Push(kCard2);
 
     return (hand35 == hand36) ? true : false;
 }
@@ -372,6 +410,37 @@ int main() {
         cout << "FAILED";
     }
     cout << endl << endl;
+
+    cout << "Front Test: " << setw(22);
+    if (FrontTest()) {
+
+        cout << "PASSED";
+    } else {
+
+        cout << "FAILED";
+    }
+    cout << endl;
+
+    cout << "Back Test 1: " << setw(21);
+    if (BackTest1()) {
+
+        cout << "PASSED";
+    } else {
+
+        cout << "FAILED";
+    }
+    cout << endl;
+
+    cout << "Back Test 2: " << setw(21);
+    if (BackTest2()) {
+
+        cout << "PASSED";
+    } else {
+
+        cout << "FAILED";
+    }
+    cout << endl << endl;
+
 
     cout << "Pop Test 1: " << setw(22);
     if (PopTest1()) {

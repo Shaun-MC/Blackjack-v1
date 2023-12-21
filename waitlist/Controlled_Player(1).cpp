@@ -1,4 +1,4 @@
-#include "Controlled_Player.h"
+  #include "Controlled_Player(1).h"
 
 #include <iomanip>
 
@@ -269,7 +269,7 @@ bool Player::gameOptionsErrorCheck(int calledVal) const{
 
     return true;
 }
-int Player::gameOptionsCheck() const{
+int Player::gameOptionsCheck() const {
 
     char responce;
 
@@ -284,7 +284,7 @@ int Player::gameOptionsCheck() const{
     cout << "Dealer: Would you like to Double Down, Hit or Stand? (D for D.D, H for Hit, S for Stand, capitalization matters)" << endl;
     cin >> responce;
 
-    while (responce != 'D' && responce != 'H' && responce != 'S'){ // same output per digit 'glitch'
+    while (responce != 'D' && responce != 'H' && responce != 'S'){ // same output per digit 'bug'
 
         cout << "Dealer: Invalid Input, please Try Again. (D for D.D, H for Hit, S for Stand, capitalization matters)" << endl;
         cin >> responce;

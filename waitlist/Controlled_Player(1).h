@@ -1,8 +1,8 @@
 #ifndef CONTROLLED_PLAYER_H
 #define CONTROLLED_PLAYER_H
 
-#include "Statistics_Manager.h"
-#include "Statistics_Manager.cpp"
+#include "Statistics_Manager(1).h"
+#include "Statistics_Manager(1).cpp"
 
 #include <iostream>
 
