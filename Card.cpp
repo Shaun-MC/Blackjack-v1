@@ -106,6 +106,17 @@ void Card::set_value(const int value) {
 }
 
 // Operator Overloads
+void Card::operator = (const Card& rval) {
+
+    this->suit_ = rval.suit_;
+    this->value_ = rval.value_;
+
+    this->suit_character_ = rval.suit_character_;
+    this->card_character_ = rval.card_character_;
+
+    this->face_value_ = rval.face_value_;
+}
+
 bool Card::operator == (const Card& rval) const {
 
     return (this->suit() == rval.suit() && this->value() == rval.value() && 

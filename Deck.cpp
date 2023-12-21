@@ -158,7 +158,7 @@ bool Deck::RemoveCard(const Card& remove_card) { // UNTESTED
             this->iterator_->next->prev = delete_node->prev;
             this->iterator_->prev->next = delete_node->next;
             
-            this->iterator_ = this->iterator_->next;
+            this->iterator_ = nullptr;
             
             delete delete_node;
 
@@ -177,11 +177,12 @@ bool Deck::RemoveCard(const Card& remove_card) { // UNTESTED
 void Deck::RetrieveCard(Card* &ret_card, const int test_tag) { // Untested - O nodes, 1 nodes ...
 
     // So a random card can be retrieved from the list - simulating a shoe of cards
-    int random_tag = 0; // REORGANIZE AFTER 1ST IS COMPLETE TESTING 
+    int random_tag = 0; 
     
-    if (test_tag == 1) {
+    // Error Checking for test_tag
+    if (test_tag != 0) {
 
-        random_tag = this->tag_list_[0];
+        random_tag = test_tag;
     } else {
 
         random_tag = CreateRandomTag();
@@ -203,13 +204,13 @@ void Deck::RetrieveCard(Card* &ret_card, const int test_tag) { // Untested - O n
     }
 
     // Move iterator into position
-    if (this->iterator_ == this->head_) { // Consider: 1 Node long list
+    if (this->iterator_ == this->head_) { // Starting from the head_
 
         while (this->iterator_->tag != random_tag) {
 
             this->iterator_ = this->iterator_->next;
         }
-    } else {
+    } else {    // Starting from the tail_
 
         while (this->iterator_->tag != random_tag) {
 
@@ -226,12 +227,29 @@ void Deck::RetrieveCard(Card* &ret_card, const int test_tag) { // Untested - O n
     // Remove card w/ random_tag from the list - same code as in RemoveCard();
     Node* delete_node = this->iterator_;
 
-    this->iterator_->next->prev = delete_node->prev;
-    this->iterator_->prev->next = delete_node->next;
-            
-    this->iterator_ = this->iterator_->next;
-            
-    delete delete_node;
+    if (this->iterator_ == this->head_) {
+
+        this->head_ = this->head_->next;
+        this->head_->prev = nullptr;
+
+        delete delete_node;
+    } else if (this->iterator_ == this->tail_) {
+
+        this->tail_ = this->tail_->prev;
+        this->tail_->next = nullptr;
+
+        delete delete_node;
+    } else {
+
+        this->iterator_->next->prev = delete_node->prev;
+        this->iterator_->prev->next = delete_node->next;
+
+        this->iterator_ = nullptr;
+
+        this->ResetIterator();
+
+        delete delete_node;
+    }
 
     --this->length_;
 }
@@ -242,9 +260,9 @@ void Deck::DisplayDeck() const { // Untested
 
     cout << "PRINTING DECK" << endl;
 
-    while (this->iterator_ != nullptr) {
+    while(this->iterator_ != nullptr) {
 
-        cout << *this->iterator_->card << " ";
+        cout << setw(4) << *this->iterator_->card;
 
         if (this->iterator_->next != nullptr && (this->iterator_->card->suit() != this->iterator_->next->card->suit())) {
 
@@ -294,7 +312,7 @@ bool Deck::CheckUsedCardTags(const int tag) const { // Untested
 
     if (this->tag_list_.size() == 0) {
 
-        return true;
+        return false;
     }
 
     for (int i = 0; i < this->tag_list_.size(); i++) {

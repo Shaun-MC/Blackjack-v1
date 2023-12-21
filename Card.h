@@ -24,6 +24,8 @@ class Card {
   void set_value(int value);
   
   // Operator Overloads
+  void operator = (const Card& rval);
+
   bool operator == (const Card& rval) const;
   bool operator != (const Card& rval) const;
 

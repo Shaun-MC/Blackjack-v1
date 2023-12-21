@@ -3,8 +3,11 @@
 
 #include <random>
 #include <vector>
+#include <iomanip>
 
 #include "Card.h"
+
+using namespace std;
 
 const int kDeckSize = 52;
 
