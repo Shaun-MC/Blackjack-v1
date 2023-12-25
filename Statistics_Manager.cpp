@@ -42,7 +42,7 @@ void Statistics_Manager::set_total_losses(const int losses) {
 
 void Statistics_Manager::set_balances(const int balance) {
 
-    this->current_balance = this->highest_balance_ = this->lowest_balance_ = this->beginning_balance_ = balance;
+    this->current_balance_ = this->highest_balance_ = this->lowest_balance_ = this->beginning_balance_ = balance;
 }
 
 // Actions
