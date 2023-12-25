@@ -40,31 +40,19 @@ void Statistics_Manager::set_total_losses(const int losses) {
     this->total_losses_ = losses;
 }
 
-// Actions
-void Statistics_Manager::SetBeginningBalance() {
+void Statistics_Manager::set_balances(const int balance) {
 
-    int balance = 0;
-
-    //cout << "Dealer: Please offer a starting balance ($100 Minimum)" << endl;
-    cin >> balance;
-
-    while (balance <= 100){
-
-        //cout << "Dealer: So how much are you really putting up?" << endl;
-        cin >> balance;
-    }
-
-    this->current_balance_ = balance;
-    
-    this->highest_balance_ = balance;
-    this->lowest_balance_ = balance;
+    this->current_balance = this->highest_balance_ = this->lowest_balance_ = this->beginning_balance_ = balance;
 }
+
+// Actions
+
 
 void Statistics_Manager::SetCurrentBet() {
 
     int bet = 0;
 
-    //cout << "Dealer: How much would you like to bet? ($)" << endl;
+    cout << "Dealer: How much would you like to bet? ($)" << endl;
     cin >> bet;
 
     while (bet > this->current_balance() || bet < 0){

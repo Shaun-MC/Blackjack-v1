@@ -10,11 +10,17 @@ class Dealer{
   Dealer(const Card& first_card, const Card& second_card);
 
   // Getters - Setters
+  int HandTotal() const;
 
   // Actions
   void ReceiveCard(const Card& new_card);
 
-  //bool PlayHand();
+  void PrintUpCard() const;
+
+  bool NaturalsCheck() const;
+  
+  bool BustCheck() const;
+  bool Stay() const;
 
   void DisplayHand() const;
 
@@ -22,11 +28,7 @@ class Dealer{
 
  private:
   // Private Member Functions
-  bool NaturalsCheck() const;
-  bool BustCheck() const;
 
-  bool Hit() const;
-  bool Stand() const;
 
   Hand hand_;
 

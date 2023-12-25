@@ -1,40 +1,23 @@
 #include "Dealer.h"
 
+// Constructor
 Dealer::Dealer(const Card& first_card, const Card& second_card) {
 
     this->hand_.AddCardToHand(first_card);
     this->hand_.AddCardToHand(second_card);
 }
 
-// Actions
-/*bool Dealer::PlayHand() {
-
-    bool dealer_win = true;
-
-    while(this->BustCheck() || !this->Stand()) {
-
-        this->Hit();
-    }
-
-    if (this->BustCheck()) {
-
-        dealer_win = false;
-    }
-
-    return dealer_win;
-}*/
-
-void Dealer::ReceiveCard(const Card& new_card) {
+// Acctions
+void Dealer::ReceiveCard(const Card& new_card) { // UNTESTED
 
     return;
 }
 
-void Dealer::DisplayHand() const {
+void Dealer::PrintUpCard() const { // UNTESTED
 
-    this->hand_.DisplayHand();
+    cout << this->hand_.front_card();
 }
 
-// Private Member Functions
 bool Dealer::NaturalsCheck() const {
 
     return (this->hand_.hand_totals1() == 21) ? true : false;
@@ -45,13 +28,14 @@ bool Dealer::BustCheck() const {
     return (this->hand_.hand_totals0() > 21) ? true : false;
 }
 
-bool Dealer::Stand() const {
+bool Dealer::Stay() const {
 
     return (this->hand_.hand_totals0() >= 17 || this->hand_.hand_totals1() >= 17) ? true : false;
 }
 
-bool Dealer::Hit() const {
+void Dealer::DisplayHand() const {
 
-    return true;
+    this->hand_.DisplayHand();
 }
+
 

@@ -52,6 +52,8 @@ class Hand {
   int count_;
 
   int ace_counter_;
+
+  bool hand_busted;
 };
 
 #endif
