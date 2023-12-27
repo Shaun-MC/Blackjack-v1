@@ -41,9 +41,9 @@ class Controlled_Player {
 
   void DisplayStatisitics() const;
 
-  void Wins(const int hand_key, const int hand_type);
-  void Loss(const int hand_key, const int hand_type);
-  void Shove(const int hand_key, const int hand_type);
+  void Wins(const int hand_key);
+  void Loss(const int hand_key);
+  void Shove(const int hand_key);
 
   // Operator Overloads
 
@@ -51,10 +51,6 @@ class Controlled_Player {
  private:
   
   // Private Member Functions
-  
-  bool SplitDesired() const;
-
-  vector<Hand> hands_;
 
   Statistics_Manager stats;
 };

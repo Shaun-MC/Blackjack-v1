@@ -25,6 +25,10 @@ bool UserResponceErrorChecking(const char& user_responce, const int key) {
         break;
 
         case 2:
+        ret = (user_responce != 'D' &&user_responce != 'H' && user_responce != 'S');
+        break;
+
+        case 3:
         ret = (user_responce != 'Y' && user_responce != 'N');
         break;
     }
@@ -109,13 +113,13 @@ int main () {
     
         if (player_naturals && dealer_naturals) { // Shove - Nobody wins - no insurance
 
-            active_player.Shove(current_hand, 0);
+            active_player.Shove(current_hand);
         } else if (dealer_naturals) { // Dealer wins - player loses
 
-            active_player.Loss(current_hand, 0);
+            active_player.Loss(current_hand);
         } else if (player_naturals) { // Player wins - 3/2 return 
 
-            active_player.Wins(current_hand, 0);
+            active_player.Wins(current_hand);
         } else {
 
             // STEP 7: Controlled Player decides how to play their hand
@@ -127,22 +131,25 @@ int main () {
             string output = "Dealer: How Would You Like to Play Your Hand? (";
             
             // TODO: Bug - player types a character they don't have the option of pressing 
-            //       Like S when they can't split... behavior is not stopped
+            //       Like S when they can't split... behavior is not stopped - FIXED? UNTESTED
+
             // STEP 7a: Checks if player can afford a split or double down, if they can, give player that option 
             // If a player cannot afford to double their bet for splits and double down
-            int responce_key = 0;
-            
+            int responce_key = -1;
+
             if (active_player.Bet() * 2 > active_player.Balance()) {
 
                 responce_key = 1;
             } else if (active_player.SplitCheck()) {
                 
                 output += "V for Split, D for Double Down, "; // Chose V for Split because it looks like the most divergent character
+                responce_key = 0;
 
             } else { // Player can afford to double down, but they cannot split their hand 
                      //  No hard coded range of card totals to be offered to double down
 
                 output += "D for Double Down, ";
+                responce_key = 2;
             }
 
             output += "H for Hit, and S for Stand): "; // Split(V) and Stand(S) can't be the same characters
@@ -150,15 +157,15 @@ int main () {
             cout << output;
             cin >> user_responce;
 
-            // TODO: BUG ^^  - Send a different key to reflect that the player can/cannot double down etc ???
-            while (UserResponceErrorChecking(user_responce, 0)) { 
+            // TODO: BUG ^^  - Send a different key to reflect that the player can/cannot double down etc ??? - UNTESTED
+            while (UserResponceErrorChecking(user_responce, responce_key)) { 
 
                 cout << output;
                 cin >> user_responce;                                                     
             }
 
             // STEP 7b: Switch statement used to determine the correct course of action depending on how the 
-            //          Controlled_Player chooses to play their hand
+            //          Controlled_Player choose to play their hand
             switch (user_responce) {
 
                 case 'D': // Intentional follow-through
@@ -221,7 +228,9 @@ int main () {
                             cout << "Dealer: H for Hit, S for Stand, captilization matters: ";
                             cin >> user_responce;
 
-                            while (UserResponceErrorChecking(user_responce, 1)) {
+                            int responce_key = 1; // Same variable used eariler - different scopes - reorganize???
+
+                            while (UserResponceErrorChecking(user_responce, responce_key)) {
 
                                 cout << "Dealer: Invalid Input. Try Again. (H/S), captilization matters: ";
                                 cin >> user_responce;
@@ -232,7 +241,8 @@ int main () {
                 } // End of case 'S' && case 'H'
                 
                 break;
-            }
+            } // End of swtich statement
+
             // STEP 8: Dealer Plays their hand
             if (!dealer_naturals) {
                 
@@ -260,57 +270,45 @@ int main () {
                 const bool player_busted = active_player.BustCheck(current_hand);
                 const bool dealer_busted = dealer.BustCheck();
 
-                const int hand_type = 1; // TODO: Whether the hand is Doubled Down or not
-
-                if (player_busted) {
+                if (player_busted || (active_player.HandTotal(current_hand) < dealer.hand_total()) ) {
 
                     // Player losses the hand
-                    active_player.Loss(current_hand, hand_type);
-                } else if (dealer_busted && !player_busted) {
+                    active_player.Loss(current_hand);
+                } else if (dealer_busted && !player_busted || (active_player.HandTotal(current_hand) > dealer.hand_total()) ) {
                     
                     // Player wins the hand
-                    active_player.Wins(current_hand, hand_type);
+                    active_player.Wins(current_hand);
                     
-                } else { // If the dealer didn't bust, and the player didn't bust,
+                } else { // Neither the dealer or player won the hand
 
-                    if (active_player.HandTotal(current_hand) > dealer.hand_total()) {
-
-                        // if the player has a greater hand than the dealer, player wins
-                        active_player.Wins(current_hand, hand_type);
-
-                    } else if (active_player.HandTotal(current_hand) < dealer.hand_total()) {
-
-                        // if the player has a lesser hand than the dealer, player losses
-                        active_player.Loss(current_hand, hand_type);
-                    } else {
-
-                        active_player.Shove(current_hand, hand_type);
-                    }
+                    active_player.Shove(current_hand);
                 }
             }
-        }
+        } 
 
         // STEP 10: Update Controlled_Player Statistics
         active_player.UpdateGameStatistics();
 
         // STEP 11: Dealer Asks Controlled_Player if they want to play another hand
         char user_responce = ' '; // Same one as used in the prev. switch statement, determine optimal scope
-
+        int responce_key = 3;     // TODO: Repreated variable across the driver - reorganize
+        
         cout << "Dealer: Would you like to play another hand? Y/N, capitalization matters: ";
         cin >> user_responce;
 
-        while (UserResponceErrorChecking(user_responce, 2)) {
+        while (UserResponceErrorChecking(user_responce, responce_key)) {
 
-            cout << "Dealer: Invalid Responce. Would you like to player another hand? Y/N, capitalization matters: ";
+            cout << "Dealer: Invalid Responce. Would you like to player another hand? Y/N, (capitalization matters): ";
+            cin >> user_responce;
         }
 
-        game_continuation = (user_responce == 'Y') ? true : false;
-
+        game_continuation = (user_responce == 'Y');
+    
     } while (game_continuation); // End of do-while loop
     // STEPS 3-11 Repeats until game_continuation is false
 
     // STEP 12: The stats the Controlled_Player accumulated over the course of the do-while loop are printed to the console
-    cout << "Dealer: It was a pleasure, here's how you did overall: ";
+    cout << "Dealer: It was a pleasure, here's how you did overall: " << endl;
     
     active_player.DisplayStatisitics();
 
