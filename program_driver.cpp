@@ -104,8 +104,8 @@ int main () {
         active_player.DisplayHands();
 
         // STEP 6: Naturals Check (BlackJack/21) for both Controlled_Player & Dealer
-        bool player_naturals = active_player.NaturalsCheck(0);
-        bool dealer_naturals = dealer.NaturalsCheck(); 
+        const bool player_naturals = active_player.NaturalsCheck(0);
+        const bool dealer_naturals = dealer.NaturalsCheck(); 
     
         if (player_naturals && dealer_naturals) { // Shove - Nobody wins - no insurance
 
@@ -126,10 +126,16 @@ int main () {
 
             string output = "Dealer: How Would You Like to Play Your Hand? (";
             
+            // TODO: Bug - player types a character they don't have the option of pressing 
+            //       Like S when they can't split... behavior is not stopped
             // STEP 7a: Checks if player can afford a split or double down, if they can, give player that option 
             // If a player cannot afford to double their bet for splits and double down
-            if (active_player.Bet() * 2 > active_player.Balance());
-            else if (active_player.SplitCheck()) {
+            int responce_key = 0;
+            
+            if (active_player.Bet() * 2 > active_player.Balance()) {
+
+                responce_key = 1;
+            } else if (active_player.SplitCheck()) {
                 
                 output += "V for Split, D for Double Down, "; // Chose V for Split because it looks like the most divergent character
 
@@ -144,7 +150,7 @@ int main () {
             cout << output;
             cin >> user_responce;
 
-            // TODO: Send a different key to reflect that the player can/cannot double down etc ???
+            // TODO: BUG ^^  - Send a different key to reflect that the player can/cannot double down etc ???
             while (UserResponceErrorChecking(user_responce, 0)) { 
 
                 cout << output;
@@ -267,12 +273,12 @@ int main () {
                     
                 } else { // If the dealer didn't bust, and the player didn't bust,
 
-                    if (active_player.HandTotal(current_hand) > dealer.HandTotal()) {
+                    if (active_player.HandTotal(current_hand) > dealer.hand_total()) {
 
                         // if the player has a greater hand than the dealer, player wins
                         active_player.Wins(current_hand, hand_type);
 
-                    } else if (active_player.HandTotal(current_hand) < dealer.HandTotal()) {
+                    } else if (active_player.HandTotal(current_hand) < dealer.hand_total()) {
 
                         // if the player has a lesser hand than the dealer, player losses
                         active_player.Loss(current_hand, hand_type);

@@ -1,14 +1,32 @@
 #include "Dealer.h"
 
 // Constructor
+Dealer::Dealer() {
+
+    // Unessecary to put anything here, at the time of writing uses Hand() constructor
+}
+
 Dealer::Dealer(const Card& first_card, const Card& second_card) {
 
     this->hand_.AddCardToHand(first_card);
     this->hand_.AddCardToHand(second_card);
 }
 
-// Acctions
+// Getters - Setters
+int Dealer::hand_total() const {
+
+    return (this->hand_.hand_totals1() > this->hand_.hand_totals0()) ? this->hand_.hand_totals1() : this->hand_.hand_totals0();
+}
+
+int Dealer::hand_length() const {
+
+    return this->hand_.count();
+}
+
+// Actions
 void Dealer::ReceiveCard(const Card& new_card) { // UNTESTED
+
+    this->hand_.AddCardToHand(new_card);
 
     return;
 }
@@ -18,22 +36,22 @@ void Dealer::PrintUpCard() const { // UNTESTED
     cout << this->hand_.front_card();
 }
 
-bool Dealer::NaturalsCheck() const {
+bool Dealer::NaturalsCheck() const { // UNTESTED
 
     return (this->hand_.hand_totals1() == 21) ? true : false;
 }
 
-bool Dealer::BustCheck() const {
+bool Dealer::BustCheck() const { // UNTESTED
 
-    return (this->hand_.hand_totals0() > 21) ? true : false;
+    return (this->hand_total() > 21) ? true : false;
 }
 
-bool Dealer::Stay() const {
+bool Dealer::Stay() const { // UNTESTED
 
-    return (this->hand_.hand_totals0() >= 17 || this->hand_.hand_totals1() >= 17) ? true : false;
+    return (this->hand_total() >= 17) ? true : false;
 }
 
-void Dealer::DisplayHand() const {
+void Dealer::DisplayHand() const { // UNTESTED
 
     this->hand_.DisplayHand();
 }

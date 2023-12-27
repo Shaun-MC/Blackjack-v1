@@ -7,6 +7,9 @@
 Hand::Hand() : count_(0), ace_counter_(0) {
 
     this->hand_totals[0] = this->hand_totals[1] = 0;
+
+    bool hand_busted = false;
+    bool doubled_down = false;
 }
 
 Hand::Hand(const Hand& rval) : count_(rval.count()), ace_counter_(rval.ace_counter_) {

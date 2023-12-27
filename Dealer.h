@@ -6,11 +6,12 @@
 class Dealer{
  public:
   // Constructors
-  Dealer(); // nessecary??
+  Dealer();
   Dealer(const Card& first_card, const Card& second_card);
 
   // Getters - Setters
-  int HandTotal() const;
+  int hand_length() const;
+  int hand_total() const;
 
   // Actions
   void ReceiveCard(const Card& new_card);
@@ -28,7 +29,6 @@ class Dealer{
 
  private:
   // Private Member Functions
-
 
   Hand hand_;
 
