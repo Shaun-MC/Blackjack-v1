@@ -27,9 +27,10 @@ class Hand {
 
     // Duplicates Allowed 
   void AddCardToHand(const Card& insert_card);
-
-    // 
+ 
   void RemoveCardFromHand(); 
+
+  void EmptyHand();
 
   void DisplayHand() const; 
 

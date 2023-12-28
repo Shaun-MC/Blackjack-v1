@@ -6,31 +6,32 @@
 
 using namespace std;
 
-bool UserResponceErrorChecking(const char& user_responce, const int key) {
+bool UserResponceErrorChecking(const char& user_responce, const int key) { // Function is in a while-loop, returns true so loop continues
 
-    if (user_responce < 65 || user_responce > 90) {
+    if (user_responce < 65 || user_responce > 90) { // Basic ACSII checking
 
         return true;
     }
 
     bool ret = false;
-    switch (key) {
+    switch (key) { // Intentional follow through - limting code reuse
 
         case 0:
-        ret = (user_responce != 'D' && user_responce != 'S' && user_responce != 'H' && user_responce != 'T');
-        break;
+        ret = (user_responce != 'V'); // Split
         
         case 1:
-        ret = (user_responce != 'H' && user_responce != 'S');
-        break;
+        ret = (user_responce != 'D'); // Double down
 
         case 2:
-        ret = (user_responce != 'D' &&user_responce != 'H' && user_responce != 'S');
+        ret = (user_responce != 'H' && user_responce != 'S'); // Hit or Stand
         break;
 
         case 3:
-        ret = (user_responce != 'Y' && user_responce != 'N');
+        ret = (user_responce != 'Y' && user_responce != 'N'); // Game continuation 
         break;
+
+        default: 
+        cerr << "UserResponceChecking() | Invalid key value" << endl;
     }
 
     return ret;
@@ -43,7 +44,7 @@ int main () {
     Controlled_Player active_player;
     Dealer dealer;
 
-    bool game_continuation = true;
+    bool game_continuation = false;
     
     // STEP 2: Set Controlled_Player beginning balance
     int balance = 0;
@@ -60,22 +61,20 @@ int main () {
 
     do {
 
-        int bet = 0, playable_hands = 1, current_hand = 0; // Naming 'conflicts' current_hand
+        int bet = 0, playable_hands = 1, current_hand = 0; // TODO: Naming 'conflicts' current_hand
 
         // STEP 3: Controlled_Player places a bet
         cout << "Dealer: How much would you like to bet? ($)" << endl;
         cin >> bet;
 
-        while (bet > active_player.Balance() || bet < 0){
+        while (bet > active_player.Balance() || bet <= 0){
             
             if (bet < 0){
 
-                cout << "Dealer: You can't make negative bets. Try Again. : ";
-            }
-
-            if (bet > active_player.Balance()){
+                cout << "Dealer: You can't make negative or free bets. Try Again. ($): ";
+            } else if (bet > active_player.Balance()) {
                 
-                cout << "Dealer: Sorry, can't bet more than you have at the table. Try Again. : " << endl;    
+                cout << "Dealer: Sorry, can't bet more than you have at the table. Try Again. ($): ";
             }
         
             cin >> bet; 
@@ -100,7 +99,7 @@ int main () {
             delete dealer_card;
         }
 
-        // STEP 5: Dealer and Player's hand are displayed to console, with respect to standard BlackJack rules
+        // STEP 5: Dealer and Player's hand are displayed to console with respect to standard BlackJack procedure
         cout << "DEALER UP CARD: ";
         dealer.PrintUpCard();
 
@@ -108,18 +107,19 @@ int main () {
         active_player.DisplayHands();
 
         // STEP 6: Naturals Check (BlackJack/21) for both Controlled_Player & Dealer
-        const bool player_naturals = active_player.NaturalsCheck(0);
+        const bool player_naturals = active_player.NaturalsCheck(current_hand);
         const bool dealer_naturals = dealer.NaturalsCheck(); 
+        const int hand_type = 0;
     
         if (player_naturals && dealer_naturals) { // Shove - Nobody wins - no insurance
 
-            active_player.Shove(current_hand);
+            active_player.Shove();
         } else if (dealer_naturals) { // Dealer wins - player loses
 
-            active_player.Loss(current_hand);
+            active_player.Loss(hand_type);
         } else if (player_naturals) { // Player wins - 3/2 return 
 
-            active_player.Wins(current_hand);
+            active_player.Wins(hand_type);
         } else {
 
             // STEP 7: Controlled Player decides how to play their hand
@@ -135,24 +135,24 @@ int main () {
 
             // STEP 7a: Checks if player can afford a split or double down, if they can, give player that option 
             // If a player cannot afford to double their bet for splits and double down
-            int responce_key = -1;
+            int responce_key = 2;
 
             if (active_player.Bet() * 2 > active_player.Balance()) {
 
-                responce_key = 1;
-            } else if (active_player.SplitCheck()) {
+                responce_key = 3;
+            } else if (active_player.SplitCheck(current_hand)) {
                 
                 output += "V for Split, D for Double Down, "; // Chose V for Split because it looks like the most divergent character
                 responce_key = 0;
 
             } else { // Player can afford to double down, but they cannot split their hand 
-                     //  No hard coded range of card totals to be offered to double down
+                     //  No hard coded range of card totals to be offered double down option
 
                 output += "D for Double Down, ";
-                responce_key = 2;
+                responce_key = 1;
             }
 
-            output += "H for Hit, and S for Stand): "; // Split(V) and Stand(S) can't be the same characters
+            output += "H for Hit, and S for Stand): "; // Split(V) and Stand(S) can not be the same characters
 
             cout << output;
             cin >> user_responce;
@@ -168,79 +168,82 @@ int main () {
             //          Controlled_Player choose to play their hand
             switch (user_responce) {
 
-                case 'D': // Intentional follow-through
+                case 'D': { // Intentional follow-through
                 
-                Card* c_ptr = new Card();
-                deck.RetrieveCard(c_ptr, 0);
+                    Card* c_ptr = new Card();
+                    deck.RetrieveCard(c_ptr, 0);
 
-                active_player.ReceiveCard(*c_ptr, current_hand);
-                cout << "Current Hand: " << endl;
+                    active_player.ReceiveCard(*c_ptr, current_hand);
+                    cout << "Current Hand: " << endl;
 
-                active_player.DisplayHands();
+                    active_player.DisplayHands();
 
-                if (active_player.BustCheck(current_hand)) {
+                    if (active_player.BustCheck(current_hand)) {
 
-                    cout << "Dealer: Bust. Looks like you lost this one" << endl;
-                    
-                    active_player.HandBusted(current_hand);       
+                        cout << "Dealer: Bust. Looks like you lost this one" << endl;
+                        
+                        active_player.HandBusted(current_hand);       
+                    }
+
+                    delete c_ptr;
                 }
-
-                delete c_ptr;
                 
                 case 'S': // Stand
                 break;
                 
-                case 'V': // Split & Hit both require the hit-stand loop
+                case 'V': { // Split & Hit both require the hit-stand loop
                 
-                ++playable_hands;
+                    ++playable_hands;
 
-                const Card* c_ptr = &active_player.hands_[0].front_card(); // TODO: Make Controlled_Player hands_ private
+                    const Card* c_ptr = &active_player.hands_[0].front_card(); // TODO: Make Controlled_Player hands_ private
 
-                active_player.AddAHand(*c_ptr);
+                    active_player.AddAHand(*c_ptr);
 
-                active_player.hands_[0].RemoveCardFromHand(); // TODO: Make Controlled_Player hands_ private
+                    active_player.hands_[0].RemoveCardFromHand(); // TODO: Make Controlled_Player hands_ private
+                }
+                case 'H': {// Hit 
 
-                case 'H': // Hit 
+                    for (int i = 0; i < playable_hands; i++) {
 
-                for (int current_hand = 0; current_hand < playable_hands; current_hand++) {
+                        while (user_responce == 'H') {
 
-                    while (user_responce == 'H') {
+                            Card* c_ptr = new Card();
 
-                        Card* c_ptr = new Card();
+                            deck.RetrieveCard(c_ptr, 0);
 
-                        deck.RetrieveCard(c_ptr, 0);
+                            active_player.ReceiveCard(*c_ptr, current_hand); // TODO: Add a key so the card is placed in the correct Controlled_Player::hands_
 
-                        active_player.ReceiveCard(*c_ptr, current_hand); // TODO: Add a key so the card is placed in the correct Controlled_Player::hands_
+                            delete c_ptr;
 
-                        delete c_ptr;
+                            active_player.DisplayHand(current_hand); // Use a that function is O(1) that only prints the back card of the current hand
 
-                        active_player.DisplayHand(current_hand); // Use a that function is O(1) that only prints the back card of the current hand
+                            if (active_player.BustCheck(current_hand)) {
 
-                        if (active_player.BustCheck(current_hand)) {
+                                cout << "Dealer: Bust. Looks like you lost this one" << endl;
+                                active_player.HandBusted(current_hand);
 
-                            cout << "Dealer: Bust. Looks like you lost this one" << endl;
-                            active_player.HandBusted(current_hand);
+                                continue; // for loop : i < playable_hands
+                            } else {
 
-                            continue; // for loop : i < playable_hands
-                        } else {
-
-                            cout << "Dealer: Would you like to hit your " << active_player.HandTotal(current_hand) << " ?" << endl;
-                            cout << "Dealer: H for Hit, S for Stand, captilization matters: ";
-                            cin >> user_responce;
-
-                            int responce_key = 1; // Same variable used eariler - different scopes - reorganize???
-
-                            while (UserResponceErrorChecking(user_responce, responce_key)) {
-
-                                cout << "Dealer: Invalid Input. Try Again. (H/S), captilization matters: ";
+                                cout << "Dealer: Would you like to hit your " << active_player.hand_total(current_hand) << " ?" << endl; // TODO: display both value of the hand if applicable
+                                cout << "Dealer: H for Hit, S for Stand, captilization matters: ";
                                 cin >> user_responce;
-                            }
-                        }
-                    } // End of while loop - user_responce == H
 
-                } // End of case 'S' && case 'H'
+                                int responce_key = 1; // Same variable used eariler - different scopes - reorganize???
+
+                                while (UserResponceErrorChecking(user_responce, responce_key)) {
+
+                                    cout << "Dealer: Invalid Input. Try Again. (H/S), captilization matters: ";
+                                    cin >> user_responce;
+                                }
+                            }
+                        } // End of while loop - user_responce == H
+                        
+                        ++current_hand;
+                    } // End of i < playable_hands for loop
+                }
                 
-                break;
+                break; // End of case 'S' && case 'H'
             } // End of swtich statement
 
             // STEP 8: Dealer Plays their hand
@@ -257,7 +260,7 @@ int main () {
 
                     dealer.ReceiveCard(*c_ptr);
 
-                    cout << "DEALER HAND TOTAL: ";
+                    cout << "DEALER HAND: ";
                     dealer.DisplayHand();
 
                     delete c_ptr;
@@ -265,28 +268,30 @@ int main () {
             }
 
             // STEP 9: Determine Game Outcome
-            for (int current_hand = 0; current_hand < playable_hands; current_hand++) {
+            // TODO: something that determines whether or not the hand was doubled down to correctly account funds
+            //       currently hard coded to always be standard win
+            for (int i = 0; i < playable_hands; i++) {
                 
-                const bool player_busted = active_player.BustCheck(current_hand);
+                const bool player_busted = active_player.BustCheck(i);
                 const bool dealer_busted = dealer.BustCheck();
 
-                if (player_busted || (active_player.HandTotal(current_hand) < dealer.hand_total()) ) {
+                if (player_busted || (active_player.hand_total(i) < dealer.hand_total()) ) {
 
                     // Player losses the hand
-                    active_player.Loss(current_hand);
-                } else if (dealer_busted && !player_busted || (active_player.HandTotal(current_hand) > dealer.hand_total()) ) {
+                    active_player.Loss(1);
+                } else if (dealer_busted && !player_busted || (active_player.hand_total(i) > dealer.hand_total()) ) {
                     
                     // Player wins the hand
-                    active_player.Wins(current_hand);
+                    active_player.Wins(1);
                     
                 } else { // Neither the dealer or player won the hand
 
-                    active_player.Shove(current_hand);
+                    active_player.Shove();
                 }
             }
         } 
 
-        // STEP 10: Update Controlled_Player Statistics
+        // STEP 10: Update Controlled_Player Statistics - nessecary?
         active_player.UpdateGameStatistics();
 
         // STEP 11: Dealer Asks Controlled_Player if they want to play another hand
@@ -301,8 +306,17 @@ int main () {
             cout << "Dealer: Invalid Responce. Would you like to player another hand? Y/N, (capitalization matters): ";
             cin >> user_responce;
         }
+        
+        // STEP 11a: Flush active_player.hands_ if the player wants to play another hand
+        if (user_responce == 'Y') {
 
-        game_continuation = (user_responce == 'Y');
+            game_continuation = true;
+            
+            active_player.FlushHands();
+        } else {
+
+            game_continuation = false;
+        }
     
     } while (game_continuation); // End of do-while loop
     // STEPS 3-11 Repeats until game_continuation is false

@@ -19,6 +19,7 @@ class Statistics_Manager {
   int current_balance() const;
 
   void set_current_bet(const int bet);
+  void set_current_balance(const int payout);
   void set_total_profit(const int profit);
   void set_total_losses(const int losses);
 
@@ -35,10 +36,9 @@ class Statistics_Manager {
 
   void DisplayGameStatisitics() const;
 
- private: 
-  
-  // Private Member Functions
   int NaturalsPayout();
+
+ private: 
 
   int beginning_balance_;
   int current_balance_;

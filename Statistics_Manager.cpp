@@ -25,6 +25,11 @@ int Statistics_Manager::current_balance() const {
     return this->current_balance_;
 }
 
+void Statistics_Manager::set_current_balance(const int payout) {
+
+    this->current_balance_ = payout;
+}
+
 void Statistics_Manager::set_current_bet(const int bet) {
 
     this->current_bet_ = bet;
@@ -84,33 +89,25 @@ void Statistics_Manager::UpdateBalance(const int game_result) {
     // Better/Different way to do this???
 
     switch(game_result){ 
-        case 0: // Naturals Payout                                                                    
-        this->current_balance_ += this->NaturalsPayout();
+        case 0: // Naturals win                                                                
+        this->current_balance_ += (this->NaturalsPayout() * this->current_bet_);
         ++this->hands_won_;
         ++this->naturals_hit_;
         break;
         
-        case 1:                                 // standard & 1 split hand win
-        this->current_balance_ += this->current_bet_;
-        ++this->hands_won_;
-        break;
-
-        case 2:                                 // double down & both splits hands win
+        case 1:  // standard & split hand win
+        case 2:  // Double down win - the current_bet_ will be updated to reflect a double down bet                      
         this->current_balance_ += (2 * this->current_bet_);
         ++this->hands_won_;
-        break;
 
-        case 3:                                 // double down & both split hands loss
+        case 3: // standards loss
+        case 4: // double down loss - the current_bet_ will be updated to reflect a double down bet                      
         this->current_balance_ -= (2 * this->current_bet_);
         ++this->hands_lost_;
         break;
 
-        case 4:                                 // standards loss
-        this->current_balance_ -= this->current_bet_;
-        ++this->hands_lost_;
-        break;
-
-        case 5:                                 // draw
+        case 5:                                 // draw / shoves
+        this->current_balance_ += this->current_bet_; // player gets their bet back
         ++this->hands_drawed_;
         break;
 

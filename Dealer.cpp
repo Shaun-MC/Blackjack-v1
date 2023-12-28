@@ -27,8 +27,6 @@ int Dealer::hand_length() const {
 void Dealer::ReceiveCard(const Card& new_card) { // UNTESTED
 
     this->hand_.AddCardToHand(new_card);
-
-    return;
 }
 
 void Dealer::PrintUpCard() const { // UNTESTED

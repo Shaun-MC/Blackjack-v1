@@ -14,15 +14,15 @@ class Controlled_Player {
   Controlled_Player();
 
   // Getters - Setters ?? 
-  int HandTotal(const int hand_key) const;
+  int hand_total(const int hand_key) const;
 
   // Actions
   void ReceiveCard(const Card& new_card, const int hand_index);
 
   bool NaturalsCheck(const int hand_index) const;
-  int GameOptionsCheck(const int hand_index) const;
+
   bool BustCheck(const int hand_index) const;
-  bool SplitCheck() const;
+  bool SplitCheck(const int hand_index) const;
 
   void BeginningBalance(const int balance);
   int Balance() const;// getter for Statistics_Manager::current_balance_
@@ -30,24 +30,26 @@ class Controlled_Player {
   int Bet() const;
 
   bool HandBusted(const int hand_key) const;
-
-  void UpdateGameStatistics();
   
-  //int GameOptionsCheck(const int hand_index) const;
   void AddAHand(const Card& split_card);
   
   void DisplayHand(const int hand_key) const;
   void DisplayHands() const;
-
+  
+  void UpdateGameStatistics();
   void DisplayStatisitics() const;
 
-  void Wins(const int hand_key);
-  void Loss(const int hand_key);
-  void Shove(const int hand_key);
+  void Wins(const int hand_type);
+  void Loss(const int hand_type);
+  void Shove();
+
+  void FlushHands(); // UNTESTED
 
   // Operator Overloads
-
+  
+  // Public Member Data
   vector<Hand> hands_; // TODO: Make private
+
  private:
   
   // Private Member Functions

@@ -108,6 +108,14 @@ void Hand::RemoveCardFromHand() { // Aces
     --this->count_;
 }
 
+void Hand::EmptyHand() { // UNTESTED
+
+    for (int i = 0; i < this->hand_.length(); i++) {
+
+        this->RemoveCardFromHand();
+    }
+}
+
 void Hand::DisplayHand() const {
 
     cout << "Current Hand Total: " << hand_totals[0];
