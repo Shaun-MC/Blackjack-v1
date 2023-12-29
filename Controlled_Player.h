@@ -7,6 +7,8 @@
 #include <vector>
 #include <string>
 
+const int kHandSize = 1;
+
 class Controlled_Player {
  public:
 
@@ -48,10 +50,11 @@ class Controlled_Player {
   // Operator Overloads
   
   // Public Member Data
-  vector<Hand> hands_; // TODO: Make private
+  vector<Hand> hands_; 
 
  private:
   
+  // TODO: Make private
   // Private Member Functions
 
   Statistics_Manager stats;

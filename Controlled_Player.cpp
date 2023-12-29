@@ -3,9 +3,7 @@
 // Constructors
 Controlled_Player::Controlled_Player() {
 
-    Hand temp;
-
-    this->hands_.push_back(temp);
+    this->hands_.resize(1);
 }
 
 int Controlled_Player::hand_total(const int hand_index) const { // UNTESTED
@@ -27,7 +25,7 @@ bool Controlled_Player::NaturalsCheck(const int hand_index) const {
     // Player can only have 2 cards on 1 hand to be considered - naturals
     // Error checking done before the function is called
 
-    return (this->hands_[hand_index].hand_totals0() == 21) ? true : false;
+    return (this->hands_[hand_index].hand_totals1() == 21) ? true : false;
 }
 
 bool Controlled_Player::BustCheck(const int hand_index) const {
@@ -39,7 +37,10 @@ bool Controlled_Player::BustCheck(const int hand_index) const {
 
 bool Controlled_Player::SplitCheck(const int hand_index) const {
 
-    return (this->hands_[hand_index].front_card() == this->hands_[hand_index].back_card());
+    const Card temp = this->hands_[hand_index].front_card();
+    const Card temp2 = this->hands_[hand_index].back_card();
+
+    return (temp.card_character() == temp2.card_character() && temp.value() == temp2.value());
 }
 
 void Controlled_Player::BeginningBalance(const int balance) {
@@ -96,11 +97,6 @@ void Controlled_Player::Shove() {
     this->stats.UpdateBalance(5);
 }
 
-void Controlled_Player::UpdateGameStatistics() { // More than just calling a stats function
-
-    
-}
-
 void Controlled_Player::DisplayHands() const {
 
     for (int i = 0; i < this->hands_.size(); i++) {
@@ -116,7 +112,7 @@ void Controlled_Player::DisplayStatisitics() const {
 
 void Controlled_Player::FlushHands() {
 
-    for (int i = 0; i < this->hands_.size() - 1; i++) {
+    for (int i = 0; i < this->hands_.size(); i++) {
 
         this->hands_[i].EmptyHand();
     }

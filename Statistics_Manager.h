@@ -26,12 +26,9 @@ class Statistics_Manager {
   void set_balances(const int bet);
   
   // Actions
-
-  void SetCurrentBet();
-  
   void UpdateBalance(const int game_result);
 
-  void UpdateStatistics();
+  void UpdateBalances();
   void UpdateEndGameStatistics();
 
   void DisplayGameStatisitics() const;

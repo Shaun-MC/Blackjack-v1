@@ -51,36 +51,6 @@ void Statistics_Manager::set_balances(const int balance) {
 }
 
 // Actions
-
-
-void Statistics_Manager::SetCurrentBet() {
-
-    int bet = 0;
-
-    cout << "Dealer: How much would you like to bet? ($)" << endl;
-    cin >> bet;
-
-    while (bet > this->current_balance() || bet < 0){
-        
-        if (bet < 0){
-
-            //cout << "Dealer: You can't make negative bets. Try Again" << endl;
-        }
-
-        if (bet > this->current_balance()){
-            
-            cout << "Dealer: Sorry, can't bet more than you have at the table." << endl;    
-        }
-        
-        //cout << "Dealer: So how much are you really betting? ($)" << endl;
-        cin >> bet; 
-    }
-
-    this->current_bet_ = bet;
-
-    ++this->hands_played_;
-}
-
 void Statistics_Manager::UpdateBalance(const int game_result) {
 
     // Splits are very awkward - 3 splits ....,
@@ -90,24 +60,23 @@ void Statistics_Manager::UpdateBalance(const int game_result) {
 
     switch(game_result){ 
         case 0: // Naturals win                                                                
-        this->current_balance_ += (this->NaturalsPayout() * this->current_bet_);
+        this->current_balance_ = this->NaturalsPayout();
         ++this->hands_won_;
         ++this->naturals_hit_;
         break;
         
         case 1:  // standard & split hand win
         case 2:  // Double down win - the current_bet_ will be updated to reflect a double down bet                      
-        this->current_balance_ += (2 * this->current_bet_);
+        this->current_balance_ += this->current_bet_;
         ++this->hands_won_;
 
         case 3: // standards loss
         case 4: // double down loss - the current_bet_ will be updated to reflect a double down bet                      
-        this->current_balance_ -= (2 * this->current_bet_);
+        this->current_balance_ -= this->current_bet_;
         ++this->hands_lost_;
         break;
 
         case 5:                                 // draw / shoves
-        this->current_balance_ += this->current_bet_; // player gets their bet back
         ++this->hands_drawed_;
         break;
 
@@ -115,17 +84,28 @@ void Statistics_Manager::UpdateBalance(const int game_result) {
         cerr << "Statistics_Manager::UpdateBalance(): | Invalid game Result" << endl;
     }
 
-    this->UpdateStatistics();
+    this->UpdateBalances();
 }
 
-void Statistics_Manager::UpdateStatistics() {
+void Statistics_Manager::UpdateBalances() {
 
+    // Total Profit & Total Losses
+    if (this->current_balance_ < this->beginning_balance_) {
+
+        this->total_losses_ = this->beginning_balance_ - this->current_balance_;
+    } else if (this->current_balance_ > this->beginning_balance_) {
+
+        this->total_profit_ = this->current_balance_ - this->beginning_balance_;
+    } else {
+
+        this->total_losses_ = this->total_profit_ = 0;
+    }
+
+    // Highest & Lowest Balance
     if (this->highest_balance_ < this->current_balance_){
         
        this->highest_balance_ = this->current_balance_;
-    }
-
-    if (this->current_balance_ < this->lowest_balance_){
+    } else if (this->current_balance_ < this->lowest_balance_) {
 
         this->lowest_balance_ = this->current_balance_;
     }

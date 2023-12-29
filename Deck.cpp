@@ -174,7 +174,7 @@ bool Deck::RemoveCard(const Card& remove_card) { // UNTESTED
     return false; // Node not found in the list
 }
 
-void Deck::RetrieveCard(Card* &ret_card, const int test_tag) { // Untested - O nodes, 1 nodes ...
+void Deck::RetrieveCard(Card &ret_card, const int test_tag) { // Untested - O nodes, 1 nodes ...
 
     // So a random card can be retrieved from the list - simulating a shoe of cards
     int random_tag = 0; 
@@ -219,7 +219,7 @@ void Deck::RetrieveCard(Card* &ret_card, const int test_tag) { // Untested - O n
     }
 
     // The correct card has been located based on random_tag
-    *ret_card = *(this->iterator_->card);
+    ret_card = *this->iterator_->card;
 
     // Add random_tag to the vector of used tags
     this->tag_list_.push_back(random_tag);

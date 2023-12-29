@@ -33,7 +33,7 @@ class Deck {
 
   bool RemoveCard(const Card& remove_card);
 
-  void RetrieveCard(Card* &ret_card, int test_tag);
+  void RetrieveCard(Card &ret_card, int test_tag);
 
   void DisplayDeck() const;
 

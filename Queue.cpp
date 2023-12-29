@@ -192,7 +192,7 @@ Queue& Queue::operator = (const Queue& rval) {
     }
 
     this->front_index_ = 0;
-    this->back_index_ = (this->length() - 1 < 0)? 0 : this->length() - 1;
+    this->back_index_ = (this->length() - 1 < 0) ? 0 : this->length() - 1;
 
     return *this;
 }

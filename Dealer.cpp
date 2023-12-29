@@ -31,7 +31,7 @@ void Dealer::ReceiveCard(const Card& new_card) { // UNTESTED
 
 void Dealer::PrintUpCard() const { // UNTESTED
 
-    cout << this->hand_.front_card();
+    cout << this->hand_.front_card() << endl;
 }
 
 bool Dealer::NaturalsCheck() const { // UNTESTED
@@ -39,7 +39,7 @@ bool Dealer::NaturalsCheck() const { // UNTESTED
     return (this->hand_.hand_totals1() == 21) ? true : false;
 }
 
-bool Dealer::BustCheck() const { // UNTESTED
+bool Dealer::Bust() const { // UNTESTED
 
     return (this->hand_total() > 21) ? true : false;
 }
@@ -50,6 +50,8 @@ bool Dealer::Stay() const { // UNTESTED
 }
 
 void Dealer::DisplayHand() const { // UNTESTED
+
+    cout << "Current Hand Total: " << this->hand_total() << endl;
 
     this->hand_.DisplayHand();
 }

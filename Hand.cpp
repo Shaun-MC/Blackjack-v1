@@ -48,7 +48,7 @@ const Card& Hand::front_card() const {
 
 const Card& Hand::back_card() const {
 
-    return this->hand_.front();
+    return this->hand_.back();
 }
 // Actions
 void Hand::AddCardToHand(const Card& insert_card) {
@@ -118,13 +118,13 @@ void Hand::EmptyHand() { // UNTESTED
 
 void Hand::DisplayHand() const {
 
-    cout << "Current Hand Total: " << hand_totals[0];
+    /*cout << "Current Hand Total: " << hand_totals[0];
     
     if (hand_totals[1] != 0) {
 
         cout << " OR " << hand_totals[1];
     } 
-    cout << endl;
+    cout << endl;*/
 
     this->hand_.DisplayQueue();
 
@@ -185,7 +185,7 @@ void Hand::UpdateHandTotal() {
     
     Card temp;
 
-    temp = (this->count() == 1) ? this->hand_.front() : this->hand_.back();
+    temp = (this->count_ == 1) ? this->hand_.front() : this->hand_.back();
 
     // A + A = 2 & 12
     // A + 10 = 11 & 21

@@ -20,7 +20,7 @@ class Dealer{
 
   bool NaturalsCheck() const;
   
-  bool BustCheck() const;
+  bool Bust() const;
   bool Stay() const;
 
   void DisplayHand() const;
