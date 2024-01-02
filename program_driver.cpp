@@ -73,7 +73,7 @@ int main () {
 
     do {
 
-        int playable_hands = 1, current_hand = 0; // TODO: Naming 'conflicts' current_hand
+        int playable_hands = 1, current_hand = 0;
 
         // STEP 3: Controlled_Player places a bet
         cout << "Dealer: How much would you like to bet? ($): ";
@@ -119,7 +119,6 @@ int main () {
         // STEP 6: Naturals Check (BlackJack/21) for both Controlled_Player & Dealer
         const bool player_naturals = active_player.NaturalsCheck(current_hand);
         const bool dealer_naturals = dealer.NaturalsCheck(); 
-        const int hand_type = 0; // .......
     
         if (player_naturals && dealer_naturals) { // Shove - Nobody wins - no insurance
 
@@ -127,10 +126,10 @@ int main () {
         } else if (dealer_naturals) { // Dealer wins - player loses
 
             dealer.DisplayHand();
-            active_player.Loss(hand_type);
+            active_player.Loss(1);
         } else if (player_naturals) { // Player wins - 3/2 return 
 
-            active_player.Wins(hand_type);
+            active_player.Wins(1);
         } else {
             
             cout << endl;
@@ -143,6 +142,8 @@ int main () {
 
             // STEP 7a: Checks if player can afford a split or double down, if they can, give player that option 
             // If a player cannot afford to double their bet for splits and double down
+            
+            // TODO: Bug - Soft lock somewhere in here, responce responce_key = 3 and doesn't get properly updated
             game.responce_key_ = 2;
 
             if (active_player.Bet() * 2 > active_player.Balance()) {
@@ -168,7 +169,7 @@ int main () {
             while (UserResponceErrorChecking(game.user_responce_, game.responce_key_)) { 
 
                 cout << "Dealer: Invalid Responce. " << output;
-                cin >> game.user_responce_;                                                     
+                cin >> game.user_responce_;                                            
             }
 
             // STEP 7b: Switch statement used to determine the correct course of action depending on how the 
@@ -176,7 +177,8 @@ int main () {
             switch (game.user_responce_) {
 
                 case 'D': { // Intentional follow-through
-                
+
+                    active_player.PlaceBet(game.bet_amount_  * 2);
                     Card new_card;
                     deck.RetrieveCard(new_card, 0);
 
@@ -197,21 +199,20 @@ int main () {
                 break;
                 
                 case 'V': { // Split & Hit both require the hit-stand loop
-                // TODO: Bug - No prompt to hit cards appears after requesting to Split - Potential solution
+        
                     ++playable_hands;
 
-                    const Card* c_ptr = &active_player.hands_[0].front_card(); // TODO: Make Controlled_Player hands_ private
-
-                    active_player.AddAHand(*c_ptr);
-
-                    active_player.hands_[0].RemoveCardFromHand(); // TODO: Make Controlled_Player hands_ private
+                    active_player.SplitHand(current_hand);
                 }
-                case 'H': {// Hit 
+                case 'H': { // Hit 
 
                     for (int i = 0; i < playable_hands; i++) {
 
                         do {
 
+                            game.user_responce_ = 'H';
+                            game.responce_key_ = 1;
+                            
                             Card new_card;
 
                             deck.RetrieveCard(new_card, 0);
@@ -232,15 +233,13 @@ int main () {
                                 cout << "Dealer: H for Hit, S for Stand, captilization matters: ";
                                 cin >> game.user_responce_;
 
-                                game.responce_key_ = 1; // Same variable used eariler - different scopes - reorganize???
-
                                 while (UserResponceErrorChecking(game.user_responce_, game.responce_key_)) {
 
                                     cout << "Dealer: Invalid Input. Try Again. (H/S), captilization matters: ";
                                     cin >> game.user_responce_;
                                 }
                             }
-                        } while (game.user_responce_ == 'H');// End of while loop - user_responce == H
+                        } while (game.user_responce_ == 'H');
                         
                         ++current_hand;
                     } // End of i < playable_hands for loop
@@ -248,55 +247,51 @@ int main () {
                 
                 break; // End of case 'S' && case 'H'
             } // End of swtich statement
+        } // End of else statement
 
-            // STEP 8: Dealer Plays their hand
-            if (!dealer_naturals) { 
-                
-                cout << "DEALER PLAYING HAND: ";
+        // STEP 8: Dealer Plays their hand
+        // TODO: Bug - Dealer doesn't have to play their hand if the player busts all their hands
+        if (!dealer_naturals || active_player.BustCheck(1)) {
+
+            cout << "DEALER PLAYING HAND: ";
+            dealer.DisplayHand();
+
+            while(!dealer.Bust() && !dealer.Stay()) {
+
+                 Card new_card;
+
+                deck.RetrieveCard(new_card, 0);
+
+                dealer.ReceiveCard(new_card);
+
+                cout << "DEALER HAND: ";
                 dealer.DisplayHand();
-
-                while(!dealer.Bust() && !dealer.Stay()) {
-
-                    Card new_card;
-
-                    deck.RetrieveCard(new_card, 0);
-
-                    dealer.ReceiveCard(new_card);
-
-                    cout << "DEALER HAND: ";
-                    dealer.DisplayHand(); // TODO: Bug - Doesn't need to include the 'OR' stuff w/ aces - just the highest digit
-                }
             }
+        }
 
-            // STEP 9: Determine Game Outcome
-
-            // TODO: something that determines whether or not the hand was doubled down to correctly account funds
-            //       currently hard coded to always be standard win
-            // TOOD: Make each text line reflect how much the player actually won
-
-            for (int hand_index = 0; hand_index < playable_hands; hand_index++) {
+        // STEP 9: Determine Game Outcome
+        for (int hand_index = 0; hand_index < playable_hands; hand_index++) {
                 
-                const bool player_busted = active_player.BustCheck(hand_index);
-                const bool dealer_busted = dealer.Bust();
+            const bool player_busted = active_player.BustCheck(hand_index);
+            const bool dealer_busted = dealer.Bust();
 
-                if (player_busted || (active_player.hand_total(hand_index) < dealer.hand_total()) ) {
+            if (player_busted || (!dealer_busted && (active_player.hand_total(hand_index) < dealer.hand_total())) ) {
 
-                    // Player losses the hand
-                    cout << "Dealer: Looks like you lost this hand. (-$" << active_player.Bet() << ")" << endl;
-                    active_player.Loss(1);
-                } else if (dealer_busted && !player_busted || (active_player.hand_total(hand_index) > dealer.hand_total()) ) {
+                // Player losses the hand
+                cout << "Dealer: Looks like you lost this hand. (-$" << active_player.Bet() << ")" << endl;
+                active_player.Loss(1);
+            } else if (dealer_busted && !player_busted || (active_player.hand_total(hand_index) > dealer.hand_total()) ) {
                     
-                    // Player wins the hand
-                    cout << "Dealer: Looks like you won this hand. (+$" << active_player.Bet() << ")" << endl; 
-                    active_player.Wins(1);
+                // Player wins the hand
+                cout << "Dealer: Looks like you won this hand. (+$" << active_player.Bet() << ")" << endl; 
+                active_player.Wins(1);
                     
-                } else { // Neither the dealer or player won the hand
+            } else { // Neither the dealer or player won the hand
 
-                    cout << "Dealer: Shove" << endl;
-                    active_player.Shove();
-                }
+                cout << "Dealer: Shove" << endl;
+                active_player.Shove();
             }
-        } // TODO: Bug - No indication that a player wins after get a BlackJack
+        }
 
         // STEP 10: Dealer Asks Controlled_Player if they want to play another hand
         cout << "Dealer: Would you like to play another hand? Y/N, capitalization matters: ";

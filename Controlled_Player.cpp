@@ -63,6 +63,15 @@ int Controlled_Player::Bet() const {
     return this->stats.current_bet();
 }
 
+void Controlled_Player::SplitHand(const int hand_index) {
+
+    const Card first_card = this->hands_[hand_index].front_card();
+
+    this->AddAHand(first_card);            
+
+    this->hands_[hand_index].RemoveCardFromHand();
+}
+
 bool Controlled_Player::HandBusted(const int hand_key) const {
 
     return (this->hands_[hand_key].hand_totals0() > 21);
@@ -101,6 +110,15 @@ void Controlled_Player::DisplayHands() const {
 
     for (int i = 0; i < this->hands_.size(); i++) {
 
+        cout << "Hand Total: " << this->hands_[i].hand_totals0();
+
+        if (this->hands_[i].hand_totals1() != 0) {
+
+            cout << " OR " << this->hands_[i].hand_totals1();
+        }
+
+        cout << '\t';
+
         this->hands_[i].DisplayHand();
     }
 }
@@ -112,9 +130,10 @@ void Controlled_Player::DisplayStatisitics() const {
 
 void Controlled_Player::FlushHands() {
 
-    for (int i = 0; i < this->hands_.size(); i++) {
+    Hand reset;
 
-        this->hands_[i].EmptyHand();
-    }
+    this->hands_.resize(1);
+
+    this->hands_[0] = reset;
 }
 // Private Member Functions

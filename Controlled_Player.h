@@ -20,7 +20,6 @@ class Controlled_Player {
 
   // Actions
   void ReceiveCard(const Card& new_card, const int hand_index);
-
   bool NaturalsCheck(const int hand_index) const;
 
   bool BustCheck(const int hand_index) const;
@@ -30,6 +29,8 @@ class Controlled_Player {
   int Balance() const;// getter for Statistics_Manager::current_balance_
   void PlaceBet(const int bet);
   int Bet() const;
+
+  void SplitHand(const int hand_index);
 
   bool HandBusted(const int hand_key) const;
   

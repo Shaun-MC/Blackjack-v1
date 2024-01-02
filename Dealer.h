@@ -25,6 +25,8 @@ class Dealer{
 
   void DisplayHand() const;
 
+  void FlushHands();
+
   // Operator Overloads
 
  private:

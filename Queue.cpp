@@ -164,35 +164,34 @@ Queue& Queue::operator = (const Queue& rval) {
 
     this->vec_.resize(rval.vec_.size());
 
-    if (!rval.IsEmpty()) {
 
-        int rval_iterator = rval.front_index_;
+    int rval_iterator = rval.front_index_;
 
-        // Copy over elements until the queue wraps around (if it does)
-        while (rval_iterator < rval.vec_.size() && rval_iterator <= rval.back_index_) {
+    // Copy over elements until the queue wraps around (if it does)
+    while (rval_iterator < rval.vec_.size() && rval_iterator <= rval.back_index_) {
 
-            this->Push(rval.vec_.at(rval_iterator));
+        this->Push(rval.vec_.at(rval_iterator));
+
+        ++rval_iterator;
+    }
+
+    // Start from the begining of rval - copy over until back_index_;
+    if (rval_iterator <= rval.back_index_) { 
+
+        rval_iterator = 0;
+
+        while (rval_iterator <= rval.back_index_) {
+
+            this->Push(rval.vec_[rval_iterator]);
 
             ++rval_iterator;
+            ++this->length_;
         }
-
-        // Start from the begining of rval - copy over until back_index_;
-        if (rval_iterator <= rval.back_index_) { 
-
-            rval_iterator = 0;
-
-            while (rval_iterator <= rval.back_index_) {
-
-                this->Push(rval.vec_[rval_iterator]);
-
-                ++rval_iterator;
-                ++this->length_;
-            }
-        } 
-    }
+    } 
 
     this->front_index_ = 0;
     this->back_index_ = (this->length() - 1 < 0) ? 0 : this->length() - 1;
+    this->length_ = rval.length_;
 
     return *this;
 }

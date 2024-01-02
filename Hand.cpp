@@ -118,14 +118,6 @@ void Hand::EmptyHand() { // UNTESTED
 
 void Hand::DisplayHand() const {
 
-    /*cout << "Current Hand Total: " << hand_totals[0];
-    
-    if (hand_totals[1] != 0) {
-
-        cout << " OR " << hand_totals[1];
-    } 
-    cout << endl;*/
-
     this->hand_.DisplayQueue();
 
     cout << endl;

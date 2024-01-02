@@ -69,8 +69,9 @@ void Statistics_Manager::UpdateBalance(const int game_result) {
         case 2:  // Double down win - the current_bet_ will be updated to reflect a double down bet                      
         this->current_balance_ += this->current_bet_;
         ++this->hands_won_;
+        break;
 
-        case 3: // standards loss
+        case 3: // standard loss
         case 4: // double down loss - the current_bet_ will be updated to reflect a double down bet                      
         this->current_balance_ -= this->current_bet_;
         ++this->hands_lost_;
@@ -84,6 +85,8 @@ void Statistics_Manager::UpdateBalance(const int game_result) {
         cerr << "Statistics_Manager::UpdateBalance(): | Invalid game Result" << endl;
     }
 
+    ++this->hands_played_;
+
     this->UpdateBalances();
 }
 
@@ -93,9 +96,11 @@ void Statistics_Manager::UpdateBalances() {
     if (this->current_balance_ < this->beginning_balance_) {
 
         this->total_losses_ = this->beginning_balance_ - this->current_balance_;
+        this->total_profit_ = 0;
     } else if (this->current_balance_ > this->beginning_balance_) {
 
         this->total_profit_ = this->current_balance_ - this->beginning_balance_;
+        this->total_losses_ = 0;
     } else {
 
         this->total_losses_ = this->total_profit_ = 0;
@@ -152,7 +157,7 @@ void Statistics_Manager::DisplayGameStatisitics() const {
     cout << "| Lowest Balance: " << setw(12) << this->lowest_balance_ << " |\n|" << setw(33) << "|\n "; 
     
     for (int i = 0; i < 30; i++) cout << '-';
-    cout << endl;
+    cout << endl << endl;
 }
 
 // Private Memeber Functions
