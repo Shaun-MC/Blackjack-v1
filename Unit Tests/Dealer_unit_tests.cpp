@@ -16,28 +16,28 @@ bool ConstructorTest1() { // Default
 
     Dealer dealer1;
 
-    return (dealer1.hand_length() == 0) ? true : false;
+    return dealer1.hand_length() == 0;
 }
 
 bool ConstructorTest2() { // Parameterized
 
     Dealer dealer2(kCard1, kCard2);
 
-    return (dealer2.hand_length() == 2) ? true : false;
+    return dealer2.hand_length() == 2;
 }
 
 bool HandTotalTest1() { // BlackJack
 
     Dealer dealer3(kCard1, kCard2);
 
-    return (dealer3.hand_total() == 21) ? true : false;
+    return dealer3.hand_total() == 21;
 }
 
 bool HandTotalTest2() { // No aces - only value in Hand::hand_total0()
 
     Dealer dealer4(kCard2, kCard3);
 
-    return (dealer4.hand_total() == 13) ? true : false;
+    return dealer4.hand_total() == 13;
 }
 
 bool HandTotalTest3() { // Aces - value in Hand::hand_total1()
@@ -46,7 +46,7 @@ bool HandTotalTest3() { // Aces - value in Hand::hand_total1()
 
     dealer5.ReceiveCard(kCard1);
 
-    return (dealer5.hand_total() == 16) ? true : false;
+    return dealer5.hand_total() == 16;
 }
 
 bool HandTotalTest4() { // Hand where hand_total1() zeros out
@@ -55,7 +55,7 @@ bool HandTotalTest4() { // Hand where hand_total1() zeros out
 
     dealer6.ReceiveCard(kCard2);
 
-    return (dealer6.hand_total() == 13) ? true : false;
+    return dealer6.hand_total() == 13;
 }
 
 bool ReceiveCardTest1() { // Function uses Hand::AddCardToHand() - Tested in Hand_unit_tests.cpp
@@ -65,7 +65,7 @@ bool ReceiveCardTest1() { // Function uses Hand::AddCardToHand() - Tested in Han
     dealer7.ReceiveCard(kCard1);
     dealer7.ReceiveCard(kCard2);
 
-    return (dealer7.hand_length() == 2) ? true : false;
+    return dealer7.hand_length() == 2;
 }
 
 bool ReceiveCardTest2() { // Confidence test - ^^
@@ -78,7 +78,7 @@ bool ReceiveCardTest2() { // Confidence test - ^^
     dealer8.ReceiveCard(kCard1);
     dealer8.ReceiveCard(kCard4);
 
-    return (dealer8.hand_length() == 5) ? true : false;
+    return dealer8.hand_length() == 5;
 }
 
 bool PrintUpCardTest1() {
@@ -123,26 +123,26 @@ bool NaturalsCheckTest2() { // Dealer doens't have BlackJack
 
     Dealer dealer12(kCard4, kCard5);
 
-    return dealer12.NaturalsCheck();
+    return !dealer12.NaturalsCheck();
 }
 
-bool BustCheckTest1() { // Busted - No Aces
+bool BustTest1() { // Busted - No Aces
 
     Dealer dealer13(kCard2, kCard2); // Hand Total : 20
 
     dealer13.ReceiveCard(kCard4); // Hand Total : 22
 
-    return dealer13.BustCheck();
+    return dealer13.Bust();
 }
 
-bool BustCheckTest2() { // Busted - Has Aces
+bool BustTest2() { // Busted - Has Aces
 
     Dealer dealer14(kCard2, kCard3); // Hand Total : 13
     bool ret = false;
 
     dealer14.ReceiveCard(kCard1); // Hand Total : 14
 
-    ret = (!dealer14.BustCheck()) ? true : false;
+    ret = (!dealer14.Bust()) ? true : false;
 
     if (!ret) {
 
@@ -151,15 +151,15 @@ bool BustCheckTest2() { // Busted - Has Aces
 
         dealer14.ReceiveCard(kCard2); // Hand total : 24;
 
-        return dealer14.BustCheck();
+        return dealer14.Bust();
     }
 }
 
-bool BustCheckTest3() { // Hasn't Busted
+bool BustTest3() { // Hasn't Busted
 
     Dealer dealer15(kCard4, kCard5);
 
-    return !dealer15.BustCheck(); // Hand Total : 11
+    return !dealer15.Bust(); // Hand Total : 11
 }
 
 bool StayTest1() { // Has to Stay - No Aces
@@ -198,201 +198,71 @@ bool StayTest4() { // Can't Stay
 
 int main() {
 
-    cout << "Constructor Test 1: " << setw(8);
-    if (ConstructorTest1()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
     cout << endl;
 
+    cout << "Constructor Test 1: " << setw(8);
+    cout << ((ConstructorTest1()) ? "PASSED" : "FAILED") << endl;
+
     cout << "Constructor Test 2: " << setw(8);
-    if (ConstructorTest2()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl << endl;
+    cout << ((ConstructorTest2()) ? "PASSED" : "FAILED") << endl << endl;
 
 
     cout << "HandTotal Test 1: " << setw(10); 
-    if (HandTotalTest1()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
+    cout << ((HandTotalTest1()) ? "PASSED" : "FAILED") << endl;
 
     cout << "HandTotal Test 2: " << setw(10);
-    if (HandTotalTest2()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
+    cout << ((HandTotalTest2()) ? "PASSED" : "FAILED") << endl;
 
     cout << "HandTotal Test 3: " << setw(10);
-    if (HandTotalTest3()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
+    cout << ((HandTotalTest3()) ? "PASSED" : "FAILED") << endl;
 
     cout << "HandTotal Test 4: " << setw(10); 
-    if (HandTotalTest4()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl << endl;
+    cout << ((HandTotalTest4()) ? "PASSED" : "FAILED") << endl << endl;
 
 
     cout << "ReceiveCard Test 1: " << setw(8);
-    if (ReceiveCardTest1()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
+    cout << ((ReceiveCardTest1()) ? "PASSED" : "FAILED") << endl;
 
     cout << "ReceiveCard Test 2: " << setw(8);
-    if (ReceiveCardTest2()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl << endl;
+    cout << ((HandTotalTest2()) ? "PASSED" : "FAILED") << endl << endl;
 
 
     cout << "PrintUpCard Test 1: ";
-    if (PrintUpCardTest1()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
+    cout << ((PrintUpCardTest1()) ? "PASSED" : "FAILED") << endl;
 
     cout << "PrintUpCard Test 2: ";
-    if (PrintUpCardTest2()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl << endl;
+    cout << ((PrintUpCardTest2()) ? "PASSED" : "FAILED") << endl << endl;
 
 
     cout << "NaturalsCheck Test 1: ";
-    if (NaturalsCheckTest1()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
+    cout << ((NaturalsCheckTest1()) ? "PASSED" : "FAILED") << endl;
 
     cout << "NaturalsCheck Test 2: ";
-    if (!NaturalsCheckTest2()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl << endl;
+    cout << ((NaturalsCheckTest2()) ? "PASSED" : "FAILED") << endl << endl;
 
 
     cout << "BustCheck Test 1: " << setw(10);
-    if (BustCheckTest1()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
+    cout << ((BustTest1()) ? "PASSED" : "FAILED") << endl;
 
     cout << "BustCheck Test 2: " << setw(10);
-    if (BustCheckTest1()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
+    cout << ((BustTest2()) ? "PASSED" : "FAILED") << endl;
 
     cout << "BustCheck Test 3: " << setw(10);
-    if (BustCheckTest1()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl << endl;
+    cout << ((BustTest3()) ? "PASSED" : "FAILED") << endl << endl;
 
 
     cout << "Stay Test 1: " << setw(15);
-    if (StayTest1()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
+    cout << ((StayTest1()) ? "PASSED" : "FAILED") << endl;
 
     cout << "Stay Test 2: " << setw(15);
-    if (StayTest2()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
+    cout << ((StayTest2()) ? "PASSED" : "FAILED") << endl;
 
     cout << "Stay Test 3: " << setw(15);
-    if (StayTest3()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
+    cout << ((StayTest3()) ? "PASSED" : "FAILED") << endl;
 
     cout << "Stay Test 4: " << setw(15);
-    if (StayTest4()) {
+    cout << ((StayTest4()) ? "PASSED" : "FAILED") << endl << endl;
 
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl << endl;
 
     return 0;
 }

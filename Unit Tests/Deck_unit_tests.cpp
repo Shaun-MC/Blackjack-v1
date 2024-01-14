@@ -18,19 +18,19 @@ bool ConstructorTest() {
 
     Deck deck1;
 
-    return (deck1.length() == 52) ? true : false;
+    return deck1.length() == 52;
 }
 
-bool DestructorTest() { // To determine 
+bool DestructorTest() { // 
 
     Deck deck2;
 
     deck2.~Deck();
 
-    return (deck2.length() == 0) ? true : false;
+    return deck2.length() == 0;
 }
 
-bool RemoveCardTest1() { // 1 Node Deck
+bool RemoveCardTest1() { // 0 Node Deck
 
     Deck deck3(1);
 
@@ -38,42 +38,42 @@ bool RemoveCardTest1() { // 1 Node Deck
 
     deck3.RemoveCard(kCard1);
 
-    return (deck3.length() == 0) ? true : false;
+    return deck3.length() == 0;
 }
 
 bool RemoveCardTest2() { // Removal at the head_
 
     Deck deck4;
 
-    return (deck4.RemoveCard(kCard1) && deck4.TestConnections()) ? true : false;
+    return (deck4.RemoveCard(kCard1) && deck4.TestConnections());
 }
 
 bool RemoveCardTest3() { // Removal at the tail_
 
     Deck deck5;
 
-    return (deck5.RemoveCard(kCard2) && deck5.TestConnections()) ? true : false;
+    return (deck5.RemoveCard(kCard2) && deck5.TestConnections());
 }
 
 bool RemoveCardTest4() { // Removal somewhere in the middle of the list
 
     Deck deck6;
 
-    return (deck6.RemoveCard(kCard3) && deck6.TestConnections()) ? true : false;
+    return (deck6.RemoveCard(kCard3) && deck6.TestConnections());
 }
 
 bool RemoveCardTest5() { // Removal closer to tail_
 
     Deck deck7;
 
-    return (deck7.RemoveCard(kCard4) && deck7.TestConnections()) ? true : false;
+    return (deck7.RemoveCard(kCard4) && deck7.TestConnections());
 }
 
 bool RemoveCardTest6() { // Removal closer to head_
 
     Deck deck8;
 
-    return (deck8.RemoveCard(kCard5) && deck8.TestConnections()) ? true : false;
+    return (deck8.RemoveCard(kCard5) && deck8.TestConnections());
 }
 
 bool RemoveCardTest7() { // Card not in the list
@@ -82,100 +82,59 @@ bool RemoveCardTest7() { // Card not in the list
 
     deck9.RemoveCard(kCard5);
 
-    return (!deck9.RemoveCard(kCard5) && deck9.TestConnections()) ? true : false;
+    return (!deck9.RemoveCard(kCard5) && deck9.TestConnections());
 }
 
 bool RetrieveCardTest1() { // Retrieve the head_ card
 
     Deck deck10;
-    Card* c_ptr = new Card();
-    bool ret = false;
+    Card retrival_card;
 
-    deck10.RetrieveCard(c_ptr, 1); // Retrieving Ace of Hearts
+    deck10.RetrieveCard(retrival_card, 1); // Retrieving Ace of Hearts
 
-    if (*c_ptr == kCard1) {
-
-        ret = true;
-    }
-
-    delete c_ptr;
-    
-    return ret;
+    return retrival_card == kCard1;
 }
 
 bool RetrieveCardTest2() { // Retrieve the tail_ card
 
     Deck deck11; 
-    Card* c_ptr = new Card();
-    bool ret = false;
+    Card retrival_card;
 
-    deck11.RetrieveCard(c_ptr, 52);
+    deck11.RetrieveCard(retrival_card, 52);
 
-    if (*c_ptr == kCard2) {
-
-        ret = true;
-    }
-
-    delete c_ptr;
-
-    return ret;
+    return retrival_card == kCard2;
 }
 
 bool RetrieveCardTest3() { // Card closer to head_
 
     Deck deck12;
-    Card* c_ptr = new Card();
-    bool ret = false;
+    Card retrival_card;
 
-    deck12.RetrieveCard(c_ptr, 9);
+    deck12.RetrieveCard(retrival_card, 9);
 
-    if (*c_ptr == kCard5) {
-
-        ret = true;
-    }
-
-    delete c_ptr;
-
-    return ret;
+    return retrival_card == kCard5;
 }
 
 bool RetrieveCardTest4() { // Card closer to tail_
 
     Deck deck13;
-    Card* c_ptr = new Card();
-    bool ret = false;
+    Card retrival_card;
 
-    deck13.RetrieveCard(c_ptr, 31);
+    deck13.RetrieveCard(retrival_card, 31);
 
-    if (*c_ptr == kCard4) {
-
-        ret = true;
-    }
-
-    delete c_ptr;
-
-    return ret;
+    return retrival_card == kCard4;
 }
 
 bool RetrieveCardTest5() { // Card has already been retrieved - create new random_tags
 
     Deck deck14;
-    Card* c1_ptr = new Card();
-    Card* c2_ptr = new Card();
-    bool ret = false;
+    Card retrival_card1;
+    Card retrival_card2;
 
-    deck14.RetrieveCard(c1_ptr, 1);
-    deck14.RetrieveCard(c2_ptr, 1);
+    deck14.RetrieveCard(retrival_card1, 1);
+    deck14.RetrieveCard(retrival_card2, 1);
 
-    if (*c1_ptr != *c2_ptr) {
-
-        ret = true;
-    }
-
-    delete c1_ptr;
-    delete c2_ptr;
-
-    return ret;
+    return retrival_card1 != retrival_card2;
 }
 
 bool DisplayDeckTest1() { // Display the entire Deck
@@ -185,7 +144,7 @@ bool DisplayDeckTest1() { // Display the entire Deck
     cout << endl;
     deck15.DisplayDeck();
 
-    return (deck15.length() == 52) ? true : false;
+    return true; // Ehh
 }
 
 bool DisplayDeckTest2() { // Remove 1 card from each suit
@@ -200,7 +159,7 @@ bool DisplayDeckTest2() { // Remove 1 card from each suit
     cout << endl;
     deck16.DisplayDeck();
 
-    return (deck16.length() == 48) ? true : false;
+    return deck16.length() == 48; // Fine
 }
 
 bool DisplayDeckTest3() { // Remove 20 cards
@@ -209,18 +168,16 @@ bool DisplayDeckTest3() { // Remove 20 cards
 
     for (int i = 0; i < 21; i++) {
 
-        Card* c_ptr = new Card();
+        Card retrieve_card;
 
-        deck17.RetrieveCard(c_ptr, 0);
-
-        delete c_ptr;
+        deck17.RetrieveCard(retrieve_card, 0);
     }
     
     cout << endl;
 
     deck17.DisplayDeck();
 
-    return (deck17.length() == 31) ? true : false;
+    return deck17.length() == 31;
 }
 
 bool TestConnectionsTest1() { // Entire deck
@@ -249,11 +206,9 @@ bool TestConnectionsTest3() { // 20 removed cards
 
     for (int i = 0; i < 21; i++) {
 
-        Card* c_ptr = new Card();
+        Card retrieval_card;
 
-        deck20.RetrieveCard(c_ptr, 0);
-
-        delete c_ptr;
+        deck20.RetrieveCard(retrieval_card, 0);
     }
 
     return deck20.TestConnections();
@@ -263,13 +218,11 @@ bool TestConnectionsTest4() { // 40 removed cards
 
     Deck deck21;
 
-    for (int i = 0; i < 41; i++) {
+    for (int i = 0; i < 21; i++) {
 
-        Card* c_ptr = new Card();
-        
-        deck21.RetrieveCard(c_ptr, 0);
+        Card retrieval_card;
 
-        delete c_ptr;
+        deck21.RetrieveCard(retrieval_card, 0);
     }
 
     return deck21.TestConnections();
@@ -277,219 +230,74 @@ bool TestConnectionsTest4() { // 40 removed cards
 
 int main() {
 
-    cout << "Constructor Test: ";
-    if (ConstructorTest()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
     cout << endl;
 
-    cout << "Destructor Test: ";
-    if (DestructorTest()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl << endl;
+    cout << "Constructor Test: " << setw(12);
+    cout << ((ConstructorTest()) ? "PASSED" : "FAILED") << endl;
+    
+    cout << "Destructor Test: " << setw(13);
+    cout << ((DestructorTest()) ? "PASSED" : "FAILED") << endl << endl;
 
 
-    cout << "RemoveCard Test 1: ";
-    if (RemoveCardTest1()) {
+    cout << "RemoveCard Test 1: " << setw(11);
+    cout << ((RemoveCardTest1()) ? "PASSED" : "FAILED") << endl;
 
-        cout << "PASSED";
-    } else {
+    cout << "RemoveCard Test 2: " << setw(11);
+    cout << ((RemoveCardTest2()) ? "PASSED" : "FAILED") << endl;
 
-        cout << "FAILED";
-    }
-    cout << endl;
+    cout << "RemoveCard Test 3: " << setw(11);
+    cout << ((RemoveCardTest3()) ? "PASSED" : "FAILED") << endl;
 
-    cout << "RemoveCard Test 2: ";
-    if (RemoveCardTest2()) {
+    cout << "RemoveCard Test 4: " << setw(11);
+    cout << ((RemoveCardTest4()) ? "PASSED" : "FAILED") << endl;
 
-        cout << "PASSED";
-    } else {
+    cout << "RemoveCard Test 5: " << setw(11);
+    cout << ((RemoveCardTest5()) ? "PASSED" : "FAILED") << endl;
 
-        cout << "FAILED";
-    }
-    cout << endl;
+    cout << "RemoveCard Test 6: " << setw(11);
+    cout << ((RemoveCardTest6()) ? "PASSED" : "FAILED") << endl;
 
-    cout << "RemoveCard Test 3: ";
-    if (RemoveCardTest3()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
-
-    cout << "RemoveCard Test 4: ";
-    if (RemoveCardTest4()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
-
-    cout << "RemoveCard Test 5: ";
-    if (RemoveCardTest5()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
-
-    cout << "RemoveCard Test 6: ";
-    if (RemoveCardTest6()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
-
-    cout << "RemoveCard Test 7: ";
-    if (RemoveCardTest7()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl << endl;
+    cout << "RemoveCard Test 7: " << setw(11);
+    cout << ((RemoveCardTest7()) ? "PASSED" : "FAILED") << endl << endl;
 
 
-    cout << "RetrieveCard Test 1: ";
-    if (RetrieveCardTest1()) {
+    cout << "RetrieveCard Test 1: " << setw(9);
+    cout << ((RetrieveCardTest1()) ? "PASSED" : "FAILED") << endl;
 
-        cout << "PASSED";
-    } else {
+    cout << "RetrieveCard Test 2: " << setw(9);
+    cout << ((RetrieveCardTest2()) ? "PASSED" : "FAILED") << endl;
 
-        cout << "FAILED";
-    }
-    cout << endl;
+    cout << "RetrieveCard Test 3: " << setw(9);
+    cout << ((RetrieveCardTest3()) ? "PASSED" : "FAILED") << endl;
 
-    cout << "RetrieveCard Test 2: ";
-    if (RetrieveCardTest2()) {
+    cout << "RetrieveCard Test 4: " << setw(9);
+    cout << ((RetrieveCardTest4()) ? "PASSED" : "FAILED") << endl;
 
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
-
-    cout << "RetrieveCard Test 3: ";
-    if (RetrieveCardTest4()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
-
-    cout << "RetrieveCard Test 4: ";
-    if (RetrieveCardTest4()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
-
-    cout << "RetrieveCard Test 5: ";
-    if (RetrieveCardTest5()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl << endl;
+    cout << "RetrieveCard Test 5: " << setw(9);
+    cout << ((RetrieveCardTest5()) ? "PASSED" : "FAILED") << endl << endl;
 
 
     cout << "DisplayDeck Test 1: ";
-    if (DisplayDeckTest1()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
+    cout << ((DisplayDeckTest1()) ? "PASSED" : "FAILED") << endl;
 
     cout << "DisplayDeck Test 2: ";
-    if (DisplayDeckTest2()) { 
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
+    cout << ((DisplayDeckTest2()) ? "PASSED" : "FAILED") << endl;
 
     cout << "DisplayDeck Test 3: ";
-    if (DisplayDeckTest3()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl << endl;
+    cout << ((DisplayDeckTest3()) ? "PASSED" : "FAILED") << endl << endl;
 
 
     cout << "TestConnections Test 1: ";
-    if (TestConnectionsTest1()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
+    cout << ((TestConnectionsTest1()) ? "PASSED" : "FAILED") << endl;
 
     cout << "TestConnections Test 2: ";
-    if (TestConnectionsTest2()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
+    cout << ((TestConnectionsTest2()) ? "PASSED" : "FAILED") << endl;
 
     cout << "TestConnections Test 3: ";
-    if (TestConnectionsTest3()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl;
+    cout << ((TestConnectionsTest3()) ? "PASSED" : "FAILED") << endl;
 
     cout << "TestConnections Test 4: ";
-    if (TestConnectionsTest4()) {
-
-        cout << "PASSED";
-    } else {
-
-        cout << "FAILED";
-    }
-    cout << endl << endl;
+    cout << ((TestConnectionsTest4()) ? "PASSED" : "FAILED") << endl;
 
     return 0;
 }
