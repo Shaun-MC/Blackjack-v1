@@ -133,12 +133,13 @@ int main () {
         } else {
             
             cout << endl;
+            
             // STEP 7: Controlled Player decides how to play their hand
             // Reminding the player so they don't bet more than they have - hard coded to stop this behavior anyways
             cout << "On the Table: $" << active_player.Balance() << endl;
 
             cout << "Dealer: ";
-            string output = "How Would You Like to Play Your Hand? " ;
+            string output = "How Would You Like to Play Your Hand? (" ;
 
             // STEP 7a: Checks if player can afford a split or double down, if they can, give player that option 
             // If a player cannot afford to double their bet for splits and double down
@@ -151,17 +152,17 @@ int main () {
                 game.responce_key_ = 3;
             } else if (active_player.SplitCheck(current_hand)) { 
                 
-                output += "(V for Split, D for Double Down, "; // Chose V for Split because it looks like the most divergent character
+                output += "V for Split, D for Double Down, "; // Chose V for Split because it looks like the most divergent character
                 game.responce_key_ = 0;
 
             } else { // Player can afford to double down, but they cannot split their hand 
                      //  No hard coded range of card totals to be offered double down option
 
-                output += "(D for Double Down, ";
+                output += "D for Double Down, ";
                 game.responce_key_ = 1;
             }
 
-            output += "(H for Hit, and S for Stand): "; // Split(V) and Stand(S) can not be the same characters
+            output += "H for Hit, and S for Stand): "; // Split(V) and Stand(S) can not be the same characters
 
             cout << output;
             cin >> game.user_responce_;
@@ -249,22 +250,24 @@ int main () {
             } // End of swtich statement
         } // End of else statement
 
+        cout << "DEALER'S HAND: ";
+        dealer.DisplayHand();
+
         // STEP 8: Dealer Plays their hand
         // TODO: Bug - Dealer doesn't have to play their hand if the player busts all their hands
-        if (!dealer_naturals || active_player.BustCheck(1)) {
+        if (!dealer_naturals && !active_player.BustCheck(1)) {
 
-            cout << "DEALER PLAYING HAND: ";
-            dealer.DisplayHand();
+            cout << "DEALER PLAYING THEIR HAND" << endl;
 
             while(!dealer.Bust() && !dealer.Stay()) {
 
-                 Card new_card;
+                Card new_card;
 
                 deck.RetrieveCard(new_card, 0);
 
                 dealer.ReceiveCard(new_card);
 
-                cout << "DEALER HAND: ";
+                cout << "DEALER'S HAND: ";
                 dealer.DisplayHand();
             }
         }
@@ -275,6 +278,7 @@ int main () {
             const bool player_busted = active_player.BustCheck(hand_index);
             const bool dealer_busted = dealer.Bust();
 
+            // Player losses if the player busted or the player's hand is less than the dealers hand
             if (player_busted || (!dealer_busted && (active_player.hand_total(hand_index) < dealer.hand_total())) ) {
 
                 // Player losses the hand
@@ -307,11 +311,12 @@ int main () {
 
         game.continuation_ = (game.user_responce_ == 'Y');
         
-        active_player.FlushHands(); // TODO: Bug - doesn't flush the entire hand or reset hand total
+        active_player.FlushHands();
         dealer.FlushHands();
 
     } while (game.continuation_); // End of do-while loop
     // STEPS 3-10 Repeats until game.continuation_ is false
+    // TODO: Check if the player has ran out of money, game automatically ends or option to rebuy
 
     // STEP 11: The stats the Controlled_Player accumulated over the course of the do-while loop are printed to the console
     cout << "Dealer: It was a pleasure, here's how you did overall: " << endl;
